@@ -108,7 +108,7 @@ const NODES: EcoNode[] = [
     icon: <g><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M7.5 7.5h.01M7.5 16.5h.01M12 7.5h4M12 16.5h4"/></g>,
   },
   {
-    id: "sff", abbr: "Service Fee Feature",
+    id: "sff", abbr: "Service Fee",
     title: "Service Fee Feature Delivery",
     desc: "A new business requirement introduced a transaction service fee during customer top-up operations, automatically deducted as part of the transaction flow across multiple enterprise systems.",
     descParas: [
@@ -759,7 +759,7 @@ export default function AgileDeliveryEcosystem() {
           </AnimatePresence>
 
           {!activeNode && (
-            <p className="absolute bottom-3 left-1/2 -translate-x-1/2 font-mono text-[0.6rem] tracking-[0.2em] text-ink-soft/50">
+            <p className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-mono text-[0.6rem] tracking-[0.2em] text-ink-soft/30 pointer-events-none select-none">
               CLICK ANY NODE TO EXPAND
             </p>
           )}
