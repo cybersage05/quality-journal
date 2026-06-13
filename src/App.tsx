@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Loader from "./components/Loader";
+import CursorGlow from "./components/CursorGlow";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Stats from "./components/Stats";
@@ -20,6 +21,7 @@ export default function App() {
   return (
     <div className="grain">
       <Loader onDone={() => setStarted(true)} />
+      <CursorGlow />
       <Nav theme={theme} onToggleTheme={toggleTheme} />
       <JournalRail />
       <main>

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Impact, Pills, Reveal, SectionHeader } from "./ui";
-import { CloudBank, Contours, Stamp, Tape, tilt, WaveDivider } from "./decor";
+import { CloudBank, Contours, Stamp, Tape, WaveDivider } from "./decor";
+import GlassTilt from "./GlassTilt";
 
 /* Icon-led story row, shared visual language with the chapter cards */
 function Row({ icon, label, children }: { icon: ReactNode; label: string; children: ReactNode }) {
@@ -97,6 +98,7 @@ const linkBtnOutline =
 export default function IronProjects() {
   return (
     <section
+      id="projects"
       aria-label="Projects built for Iron Software"
       className="relative overflow-hidden bg-paper-warm"
     >
@@ -128,9 +130,9 @@ export default function IronProjects() {
         <div className="mt-12 grid gap-6 lg:grid-cols-2">
           {/* ---- Exhibit A — IronPDF QA Test Suite ---- */}
           <Reveal>
+            <GlassTilt baseRotate={-0.5} className="h-full">
             <article
-              style={tilt(-0.5)}
-              className="relative flex h-full flex-col gap-4 rounded-2xl border border-gold/40 bg-card p-6 shadow-[0_2px_12px_rgba(201,164,92,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_28px_rgba(201,164,92,0.16)] sm:p-7"
+              className="relative flex h-full flex-col gap-4 rounded-2xl border border-gold/40 bg-card p-6 shadow-[0_2px_12px_rgba(201,164,92,0.08)] transition-shadow duration-300 hover:shadow-[0_14px_34px_rgba(201,164,92,0.2)] sm:p-7"
             >
               <Tape className="-top-3 left-10" rotate={-4} />
               <span aria-hidden="true" className="hand absolute -top-1 right-6 text-xl text-gold">
@@ -169,13 +171,14 @@ export default function IronProjects() {
               </div>
               <Stamp text="Live · CI/CD" color="var(--terracotta)" className="right-5 top-12 hidden sm:inline-block" />
             </article>
+            </GlassTilt>
           </Reveal>
 
           {/* ---- Exhibit B — OldPhonePad Simulator ---- */}
           <Reveal delay={0.08}>
+            <GlassTilt baseRotate={0.5} className="h-full">
             <article
-              style={tilt(0.5)}
-              className="relative flex h-full flex-col gap-4 rounded-2xl border border-gold/40 bg-card p-6 shadow-[0_2px_12px_rgba(201,164,92,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_28px_rgba(201,164,92,0.16)] sm:p-7"
+              className="relative flex h-full flex-col gap-4 rounded-2xl border border-gold/40 bg-card p-6 shadow-[0_2px_12px_rgba(201,164,92,0.08)] transition-shadow duration-300 hover:shadow-[0_14px_34px_rgba(201,164,92,0.2)] sm:p-7"
             >
               <Tape className="-top-3 right-10" rotate={5} />
               <span aria-hidden="true" className="hand absolute -top-1 right-6 text-xl text-gold">
@@ -207,6 +210,7 @@ export default function IronProjects() {
                 </a>
               </div>
             </article>
+            </GlassTilt>
           </Reveal>
         </div>
 

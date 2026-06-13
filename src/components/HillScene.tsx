@@ -358,11 +358,10 @@ export default function HillScene({
       {!imageMode && !isMobile && <fog attach="fog" args={[palettes[theme].fog, 6, 26]} />}
       {!imageMode && <Hills theme={theme} animate={animate} />}
       {!imageMode && <Clouds theme={theme} animate={animate} />}
-      <Fireflies
-        theme={theme}
-        count={imageMode ? (isMobile ? 5 : 10) : isMobile ? 8 : 16}
-        animate={animate}
-      />
+      {/* Fireflies only in standalone scene — the hero (imageMode) keeps no insects */}
+      {!imageMode && (
+        <Fireflies theme={theme} count={isMobile ? 8 : 16} animate={animate} />
+      )}
       <Petals
         theme={theme}
         count={imageMode ? (isMobile ? 8 : 18) : isMobile ? 10 : 22}

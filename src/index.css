@@ -292,6 +292,121 @@ body {
   animation: migrate 3.2s linear infinite;
 }
 
+/* ── Interactive landscape effects ──────────────────────────────────────── */
+
+/* Telecom signal waves — concentric rings expanding from the tower */
+@keyframes signal-ping {
+  0% {
+    transform: scale(0.3);
+    opacity: 0.7;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+.signal-ping {
+  transform-origin: center;
+  animation: signal-ping 4s ease-out infinite;
+}
+
+/* Observatory radar sweep — a rotating conic wedge */
+@keyframes radar-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.radar-sweep {
+  animation: radar-sweep 10s linear infinite;
+}
+
+/* Soft pulsing glow (observatory dome, quality shield) */
+@keyframes soft-glow {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.08);
+  }
+}
+.soft-glow {
+  animation: soft-glow 4.5s ease-in-out infinite;
+}
+
+/* Factory steam — small puffs rising and fading */
+@keyframes steam-rise {
+  0% {
+    transform: translateY(0) scale(0.7);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-26px) scale(1.5);
+    opacity: 0;
+  }
+}
+.steam {
+  animation: steam-rise 5s ease-out infinite;
+}
+
+/* River shimmer — a light streak sliding along the water */
+@keyframes river-shimmer {
+  0% {
+    transform: translateX(-40%);
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.55;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(60%);
+    opacity: 0;
+  }
+}
+.river-shimmer {
+  animation: river-shimmer 6.5s ease-in-out infinite;
+}
+
+/* Gentle ambient sway for foliage / floating icons */
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-2.5deg);
+  }
+  50% {
+    transform: rotate(2.5deg);
+  }
+}
+.sway {
+  transform-origin: bottom center;
+  animation: sway 6s ease-in-out infinite;
+}
+
+/* Daylight breathing — sunlight intensity slowly shifting */
+@keyframes daylight {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+.daylight {
+  animation: daylight 14s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .leaf-path {
     animation: none;
@@ -303,10 +418,20 @@ body {
   .chevron-bob,
   .type-cursor,
   .flow-dot,
-  .migrate-dot {
+  .migrate-dot,
+  .signal-ping,
+  .radar-sweep,
+  .soft-glow,
+  .steam,
+  .river-shimmer,
+  .sway,
+  .daylight {
     animation: none !important;
   }
-  .cloud-cross {
+  .cloud-cross,
+  .signal-ping,
+  .steam,
+  .river-shimmer {
     opacity: 0 !important;
   }
 }

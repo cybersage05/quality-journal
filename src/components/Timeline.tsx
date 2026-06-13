@@ -86,6 +86,7 @@ export default function Timeline() {
   return (
     <section
       ref={sectionRef}
+      id="timeline"
       aria-label="Career timeline"
       className="relative overflow-hidden bg-paper"
     >

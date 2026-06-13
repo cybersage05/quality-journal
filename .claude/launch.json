@@ -3,10 +3,10 @@
   "configurations": [
     {
       "name": "quality-journal",
-      "runtimeExecutable": "D:\\Claude\\tools\\node-v22.14.0-win-x64\\npm.cmd",
+      "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "cwd": "D:\\Claude\\quality-journal",
-      "port": 5173
+      "port": 5174,
+      "autoPort": true
     }
   ]
 }
