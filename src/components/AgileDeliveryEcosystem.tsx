@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import {
   AnimatePresence,
@@ -362,33 +362,29 @@ function DesktopNode({
   );
 }
 
-/* ── Desktop: detail card below the network ────────────────── */
+/* ── Desktop: detail card (floating, positioned near node) ─── */
 
 function DetailCard({
-  node, onClose, reduced,
+  node, onClose,
 }: {
   node: EcoNode; onClose: () => void; reduced: boolean;
 }) {
   const isVal = node.variant === "validation";
   const borderCls = node.variant === "feature"
-    ? "border-gold/35 bg-[rgba(212,168,71,0.045)]"
+    ? "border-gold/35"
     : node.variant === "validation"
-    ? "border-forest/35 bg-[rgba(26,120,80,0.045)]"
-    : "border-sky-deep/35 bg-[rgba(56,189,248,0.055)]";
+    ? "border-forest/35"
+    : "border-sky-deep/35";
 
   const shadow = node.variant === "feature"
-    ? "shadow-[0_8px_32px_rgba(212,168,71,0.12)]"
+    ? "shadow-[0_8px_32px_rgba(212,168,71,0.18)]"
     : node.variant === "validation"
-    ? "shadow-[0_8px_32px_rgba(26,120,80,0.12)]"
-    : "shadow-[0_8px_32px_rgba(56,189,248,0.14)]";
+    ? "shadow-[0_8px_32px_rgba(26,120,80,0.18)]"
+    : "shadow-[0_8px_32px_rgba(56,189,248,0.2)]";
 
   return (
-    <motion.div
-      initial={reduced ? false : { opacity: 0, y: 18, filter: "blur(6px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      exit={reduced ? undefined : { opacity: 0, y: 10, filter: "blur(3px)" }}
-      transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-      className={`mt-6 rounded-2xl border p-6 backdrop-blur-[4px] ${borderCls} ${shadow}`}
+    <div
+      className={`rounded-2xl border bg-paper/95 p-5 backdrop-blur-md ${borderCls} ${shadow}`}
       role="region"
       aria-label={`${node.title} details`}
     >
@@ -411,13 +407,13 @@ function DetailCard({
       </div>
 
       {isVal ? (
-        <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3">
+        <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 sm:grid-cols-3">
           {node.details.map((d, i) => (
             <ChecklistItem key={d} text={d} delay={i * 0.08} />
           ))}
         </ul>
       ) : (
-        <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-4">
+        <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 sm:grid-cols-4">
           {node.details.map((d) => (
             <li key={d} className="flex items-start gap-2 text-[0.78rem] leading-[1.55] text-ink-soft">
               <Check />
@@ -426,7 +422,7 @@ function DetailCard({
           ))}
         </ul>
       )}
-    </motion.div>
+    </div>
   );
 }
 
@@ -610,7 +606,7 @@ export default function AgileDeliveryEcosystem() {
           Container is h-[600px]. SVG viewBox matches 1000×600.
           Nodes are absolutely positioned at (cx/1000, cy/600).  */}
       <div className="mt-10 hidden lg:block" aria-label="Enterprise delivery network — click nodes to expand">
-        <div className="relative h-[600px] w-full" role="group" aria-label="Delivery network nodes">
+        <div className="relative min-h-[600px] w-full" role="group" aria-label="Delivery network nodes">
           {/* SVG paths + particles */}
           <NetworkSVG reduced={!!reduced} />
 
@@ -649,25 +645,36 @@ export default function AgileDeliveryEcosystem() {
               />
             );
           })}
-        </div>
 
-        {/* Detail card below the network */}
-        <AnimatePresence mode="wait">
-          {activeNode && (
-            <DetailCard
-              key={active!}
-              node={activeNode}
-              onClose={() => setActive(null)}
-              reduced={!!reduced}
-            />
+          {/* Floating detail card — positioned near the active node */}
+          <AnimatePresence mode="wait">
+            {activeNode && (() => {
+              const pos = NODE_POS[activeNode.id];
+              const isUpper = pos.cy < 350;
+              const cardPos: React.CSSProperties = isUpper
+                ? { top: `calc(${(pos.cy / 600) * 100}% + 54px)`, left: 8, right: 8 }
+                : { bottom: `calc(${((600 - pos.cy) / 600) * 100}% + 54px)`, left: 8, right: 8 };
+              return (
+                <motion.div
+                  key={active!}
+                  style={{ position: "absolute", zIndex: 30, ...cardPos }}
+                  initial={reduced ? false : { opacity: 0, y: isUpper ? 14 : -14, filter: "blur(5px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={reduced ? undefined : { opacity: 0, y: isUpper ? -8 : 8, filter: "blur(3px)" }}
+                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <DetailCard node={activeNode} onClose={() => setActive(null)} reduced={!!reduced} />
+                </motion.div>
+              );
+            })()}
+          </AnimatePresence>
+
+          {!activeNode && (
+            <p className="absolute bottom-3 left-1/2 -translate-x-1/2 font-mono text-[0.6rem] tracking-[0.2em] text-ink-soft/50">
+              CLICK ANY NODE TO EXPAND
+            </p>
           )}
-        </AnimatePresence>
-
-        {!activeNode && (
-          <p className="mt-4 text-center font-mono text-[0.6rem] tracking-[0.2em] text-ink-soft/50">
-            CLICK ANY NODE TO EXPAND
-          </p>
-        )}
+        </div>
       </div>
 
       {/* ── Mobile vertical layout ────────────────────────── */}
