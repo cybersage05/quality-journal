@@ -3,39 +3,39 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --paper: #f5f1e4;
-  --paper-warm: #efe8d6;
-  --card: #faf7ee;
-  --ink: #2e3a30;
-  --ink-soft: #5a6b5d;
-  --forest: #3d6b4f;
-  --green: #5e9272;
-  --green-light: #a8c8a8;
-  --mist: #bfd6da;
-  --sky: #a9d0e8;
-  --sky-deep: #5d9ad1;
+  --paper: #F3F7FC;
+  --paper-warm: #EBF4FA;
+  --card: #ffffff;
+  --ink: #0F172A;
+  --ink-soft: #475569;
+  --forest: #1A7850;
+  --green: #2E9E6E;
+  --green-light: #7EC8A4;
+  --mist: #BAE6FD;
+  --sky: #7DD3FC;
+  --sky-deep: #38BDF8;
   --cloud: #ffffff;
-  --gold: #c9a45c;
-  --terracotta: #b8745a;
-  --line: #d9d2bd;
+  --gold: #D4A847;
+  --terracotta: #C47A5A;
+  --line: #CBD5E1;
 }
 
 .dark {
-  --paper: #1b231d;
-  --paper-warm: #161d18;
-  --card: #222b24;
-  --ink: #e8e4d4;
-  --ink-soft: #a3b3a5;
-  --forest: #8fbf9f;
-  --green: #6fa583;
-  --green-light: #3d5546;
-  --mist: #243a40;
-  --sky: #1e3a52;
-  --sky-deep: #142838;
-  --cloud: #cfe0ec;
-  --gold: #d4b370;
-  --terracotta: #cd8c70;
-  --line: #36422f;
+  --paper: #0F172A;
+  --paper-warm: #0D1526;
+  --card: #1E293B;
+  --ink: #E2E8F0;
+  --ink-soft: #94A3B8;
+  --forest: #7ECDA8;
+  --green: #4ADE80;
+  --green-light: #1A3A2A;
+  --mist: #1a3a52;
+  --sky: #1E4A8A;
+  --sky-deep: #38BDF8;
+  --cloud: #BAE6FD;
+  --gold: #D4A847;
+  --terracotta: #CD8C70;
+  --line: #2D3748;
 }
 
 @theme inline {
@@ -407,6 +407,56 @@ body {
   animation: daylight 14s ease-in-out infinite;
 }
 
+/* Volumetric sun rays in hero */
+@keyframes sun-rays {
+  0%, 100% { opacity: 0.10; }
+  50% { opacity: 0.20; }
+}
+.sun-rays {
+  animation: sun-rays 8s ease-in-out infinite;
+}
+
+/* Blue glow pulse for interactive highlights */
+@keyframes blue-beacon {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(1.06); }
+}
+.blue-beacon {
+  animation: blue-beacon 3s ease-in-out infinite;
+}
+
+/* Magnetic button ripple */
+@keyframes ripple-out {
+  from { transform: translate(-50%, -50%) scale(0); opacity: 0.35; }
+  to   { transform: translate(-50%, -50%) scale(2.8); opacity: 0; }
+}
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+.ripple::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 100%; height: 100%;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.22);
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+}
+.ripple:active::after {
+  animation: ripple-out 0.5s ease-out forwards;
+}
+
+/* Glass card glow on hover */
+.glass-hover {
+  transition: box-shadow 0.3s ease, transform 0.25s ease, border-color 0.3s ease;
+}
+.glass-hover:hover {
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.15), 0 2px 8px rgba(0,0,0,0.06);
+  transform: translateY(-3px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .leaf-path {
     animation: none;
@@ -425,7 +475,9 @@ body {
   .steam,
   .river-shimmer,
   .sway,
-  .daylight {
+  .daylight,
+  .sun-rays,
+  .blue-beacon {
     animation: none !important;
   }
   .cloud-cross,

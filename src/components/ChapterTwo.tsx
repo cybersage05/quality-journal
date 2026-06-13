@@ -2,7 +2,8 @@ import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import ArchDiagram from "./ArchDiagram";
 import ReleaseCycle from "./ReleaseCycle";
-import { Impact, MetaChips, Pills, Reveal, SectionHeader } from "./ui";
+import AgileWorkflow from "./AgileWorkflow";
+import { MetaChips, Pills, Reveal, SectionHeader } from "./ui";
 import {
   Birds,
   CloudBank,
@@ -351,8 +352,8 @@ export default function ChapterTwo() {
               />
               <dl className="mt-2 space-y-4">
                 {[
-                  ["Scale", "10M+ subscriber records · 99%+ uptime"],
-                  ["CI/CD", "Deployment frequency improved ~40%"],
+                  ["Platform", "99%+ uptime · MapR · Greenplum · OCP"],
+                  ["CI/CD", "Deployment frequency improved across releases"],
                 ].map(([k, v]) => (
                   <div key={k} className="flex items-baseline gap-4 border-b border-line pb-3">
                     <dt className="w-16 shrink-0 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-soft">
@@ -362,9 +363,6 @@ export default function ChapterTwo() {
                   </div>
                 ))}
               </dl>
-              <div className="mt-auto">
-                <Impact>2 Ericsson awards earned across three years</Impact>
-              </div>
             </article>
           </Reveal>
           </div>
@@ -390,6 +388,10 @@ export default function ChapterTwo() {
 
         <Reveal className="mt-12">
           <Migration />
+        </Reveal>
+
+        <Reveal className="mt-12">
+          <AgileWorkflow />
         </Reveal>
 
         <Sprig
