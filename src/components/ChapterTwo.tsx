@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import ArchDiagram from "./ArchDiagram";
-import ReleaseCycle from "./ReleaseCycle";
 import AgileWorkflow from "./AgileWorkflow";
 import { MetaChips, Pills, Reveal, SectionHeader } from "./ui";
 import {
@@ -295,15 +294,8 @@ export default function ChapterTwo() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid items-start gap-10 lg:grid-cols-2">
+        <div className="mt-12 grid items-start gap-6 lg:grid-cols-2">
           <Reveal>
-            <h3 className="eyebrow mb-6 text-center">The Release Cycle — select any stage</h3>
-            <ReleaseCycle />
-            <Fig n="05" label="nine stages, every release, three years" />
-          </Reveal>
-
-          <div className="flex flex-col gap-6">
-          <Reveal delay={0.1}>
             <article className="dotgrid relative h-full rounded-2xl border border-line bg-card p-6 sm:p-7">
               <svg
                 viewBox="0 0 40 40"
@@ -343,7 +335,7 @@ export default function ChapterTwo() {
             </article>
           </Reveal>
 
-          <Reveal delay={0.15}>
+          <Reveal delay={0.1}>
             <article className="flex h-full flex-col gap-5 rounded-2xl border border-line bg-card p-6 sm:p-7">
               <p className="eyebrow">Platform Reliability</p>
               <Pills
@@ -365,7 +357,6 @@ export default function ChapterTwo() {
               </dl>
             </article>
           </Reveal>
-          </div>
         </div>
 
         <Reveal className="mt-12 text-center">

@@ -114,26 +114,6 @@ const facts: { value: number; prefix?: string; suffix?: string; label: string; i
       </g>
     ),
   },
-  {
-    value: 2,
-    label: "company-level quality awards",
-    icon: (
-      <g>
-        <circle cx="12" cy="9" r="5.5" />
-        <path d="M9 13.5L7 21l5-2.5L17 21l-2-7.5M10 9l1.5 1.5L15 7" />
-      </g>
-    ),
-  },
-  {
-    value: 3,
-    label: "NPI validations — critical defects caught before mass production",
-    icon: (
-      <g>
-        <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" />
-        <path d="M9 12l2.2 2.2L15.5 10" />
-      </g>
-    ),
-  },
 ];
 
 /* Animated medallion — gold ring draws itself, number counts up */
@@ -315,7 +295,7 @@ export default function ChapterOne() {
           <Reveal>
             <p className="eyebrow mb-6 text-center">Field Notes · Measured at Cal-Comp</p>
           </Reveal>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="flex justify-center">
             {facts.map((f, i) => (
               <FactMedallion key={f.label} {...f} delay={i * 0.15} />
             ))}
