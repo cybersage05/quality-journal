@@ -162,7 +162,7 @@ export default function IronProjects() {
                 <Proof value="2× daily" label="automated runs" />
                 <Proof value="5" label="test categories" />
               </div>
-              <Pills items={["C#", ".NET 8", "xUnit", "GitHub Actions", "IronPDF"]} />
+              <Pills items={["C#", "xUnit", "GitHub Actions", "IronPDF"]} />
               <div className="mt-auto flex flex-wrap items-center gap-3 border-t border-line pt-4">
                 <a href="https://cybersage05.github.io/IronPdfQA" target="_blank" rel="noreferrer" className={linkBtn}>
                   Live Dashboard ↗
@@ -205,7 +205,7 @@ export default function IronProjects() {
                 <Proof value="22ms" label="execution" />
                 <Proof value="NuGet" label="packaged" />
               </div>
-              <Pills items={["C#", ".NET 8", "xUnit", "NuGet"]} />
+              <Pills items={["C#", "xUnit", "NuGet"]} />
               <div className="mt-auto flex flex-wrap items-center gap-3 border-t border-line pt-4">
                 <a href="https://github.com/cybersage05/OldPhonePad" target="_blank" rel="noreferrer" className={linkBtn}>
                   GitHub ↗

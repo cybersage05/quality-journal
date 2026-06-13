@@ -9,12 +9,12 @@ import {
 import type { ReactNode } from "react";
 import type { Theme } from "../hooks/useTheme";
 import { usePointer } from "../hooks/usePointer";
-import { MarginNote } from "./decor";
+import { Cloud, MarginNote } from "./decor";
 
 const HillScene = lazy(() => import("./HillScene"));
 
 const TYPED_LINE =
-  "5+ years across firmware validation, system integration and test automation.";
+  "5+ years across software validation, system integration and test automation.";
 
 function TypedLine({ start }: { start: boolean }) {
   const reduced = useReducedMotion();
@@ -93,7 +93,7 @@ function Landmark({
           whileHover={reduced ? undefined : { scale: 1.14 }}
           whileFocus={reduced ? undefined : { scale: 1.14 }}
           transition={{ type: "spring", stiffness: 320, damping: 20 }}
-          className="relative z-[2] flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-white/80 bg-white/15 text-white shadow-[0_2px_12px_rgba(20,40,56,0.3)] backdrop-blur-[2px] transition-colors duration-300 group-hover:border-gold group-hover:bg-gold/25 group-focus-visible:border-gold"
+          className="relative z-[2] flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-white/80 bg-white/15 text-white shadow-[0_2px_12px_rgba(20,40,56,0.3)] backdrop-blur-[2px] transition-all duration-300 group-hover:border-sky-deep group-hover:bg-sky-deep/25 group-hover:shadow-[0_0_20px_rgba(56,189,248,0.35)] group-focus-visible:border-sky-deep"
         >
           <svg
             viewBox="0 0 24 24"
@@ -108,8 +108,8 @@ function Landmark({
           </svg>
         </motion.span>
 
-        {/* always-on label */}
-        <span className="z-[2] rounded-full bg-[#142838]/55 px-2.5 py-0.5 font-mono text-[0.58rem] tracking-[0.22em] text-white backdrop-blur-[2px]">
+        {/* label — hidden by default, revealed on hover/focus */}
+        <span className="z-[2] rounded-full bg-[#142838]/60 px-2.5 py-0.5 font-mono text-[0.58rem] tracking-[0.22em] text-white opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
           {label}
         </span>
 
@@ -191,41 +191,6 @@ function Windows({ reduced }: { reduced: boolean }) {
   );
 }
 
-/* Floating technology marker — drifts, enlarges and labels on hover */
-function TechIcon({
-  label,
-  icon,
-  position,
-  delay,
-  reduced,
-}: {
-  label: string;
-  icon: ReactNode;
-  position: string;
-  delay: string;
-  reduced: boolean;
-}) {
-  return (
-    <div
-      aria-hidden="true"
-      className={`pointer-events-none absolute z-[6] hidden lg:block ${position}`}
-    >
-      <div
-        className={`group pointer-events-auto relative flex items-center justify-center ${reduced ? "" : "float-bob"}`}
-        style={{ animationDelay: delay }}
-      >
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/55 bg-white/15 text-white shadow-[0_2px_10px_rgba(20,40,56,0.25)] backdrop-blur-[2px] transition-transform duration-300 group-hover:scale-125">
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-            {icon}
-          </svg>
-        </span>
-        <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#142838]/60 px-2 py-0.5 font-mono text-[0.5rem] tracking-[0.18em] text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          {label}
-        </span>
-      </div>
-    </div>
-  );
-}
 
 /* Animated quality shield — pulses softly, checkmark draws on hover */
 function QualityShield({ reduced }: { reduced: boolean }) {
@@ -262,7 +227,6 @@ function QualityShield({ reduced }: { reduced: boolean }) {
   );
 }
 
-const badges = ["Work Permit Holder", "Open to Relocation", "Available in 1 Month"];
 
 const stagger = {
   hidden: {},
@@ -273,13 +237,6 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: "easeOut" as const } },
 };
 
-/* tech-icon glyphs */
-const techGlyphs = {
-  aws: <path d="M4 14c3 2 13 2 16 0M6 17c2 1.5 10 1.5 12 0M7 11l2-5 2 4 2-5 2 6" />,
-  api: <g><path d="M8 7l-4 5 4 5M16 7l4 5-4 5" /><path d="M13 6l-2 12" /></g>,
-  sql: <g><ellipse cx="12" cy="6" rx="7" ry="2.6" /><path d="M5 6v12c0 1.5 3 2.6 7 2.6s7-1.1 7-2.6V6M5 12c0 1.5 3 2.6 7 2.6s7-1.1 7-2.6" /></g>,
-  docker: <g><rect x="3" y="10" width="3" height="3" /><rect x="7" y="10" width="3" height="3" /><rect x="11" y="10" width="3" height="3" /><rect x="7" y="6" width="3" height="3" /><path d="M3 13c0 4 3 6 7 6 5 0 8-3 9-7 1 .5 2 .3 3-.5-1-1.5-2.5-1.2-3-1" /></g>,
-};
 
 export default function Hero({ theme, started }: { theme: Theme; started: boolean }) {
   const reduced = useReducedMotion();
@@ -351,6 +308,48 @@ export default function Hero({ theme, started }: { theme: Theme; started: boolea
         )}
       </motion.div>
 
+      {/* ── Volumetric sun rays ── */}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute right-[4%] top-[-8%] z-[3] h-[65%] w-[52%] ${reduced ? "" : "sun-rays"}`}
+      >
+        <svg viewBox="0 0 500 380" className="h-full w-full" fill="none" preserveAspectRatio="xMaxYMin meet">
+          <defs>
+            <filter id="hero-ray-blur" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="18" />
+            </filter>
+          </defs>
+          <g filter="url(#hero-ray-blur)" opacity="0.22">
+            {[0, 1, 2, 3, 4, 5, 6].map((i) => {
+              const angle = (-55 + i * 19) * (Math.PI / 180);
+              const sx = 420; const sy = 28; const len = 490;
+              return (
+                <line
+                  key={i}
+                  x1={sx} y1={sy}
+                  x2={sx + len * Math.cos(angle)}
+                  y2={sy + len * Math.sin(angle)}
+                  stroke="rgba(255,252,218,1)"
+                  strokeWidth={16 - i * 1.2}
+                  strokeLinecap="round"
+                />
+              );
+            })}
+          </g>
+        </svg>
+      </div>
+
+      {/* ── Animated sky clouds ── */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[4]">
+        <Cloud className="cloud absolute left-[4%] top-[5%] w-52 blur-[2px]" opacity={0.60} />
+        <Cloud className="cloud absolute left-[26%] top-[3%] w-40 blur-[1px] [animation-delay:-22s]" opacity={0.42} />
+        <Cloud className="cloud-cross absolute top-[9%] w-44 blur-[3px] [animation-delay:-55s]" opacity={0.30} />
+        <Cloud className="cloud absolute right-[12%] top-[6%] hidden w-36 blur-[2px] [animation-delay:-38s] lg:block" opacity={0.38} />
+      </div>
+
+      {/* ── Enhanced atmospheric depth ── */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[3] bg-[radial-gradient(ellipse_75%_55%_at_58%_38%,rgba(186,230,253,0.10),transparent_65%)]" />
+
       {/* living particles over the painting — drifting leaves (no insects) */}
       <div aria-hidden="true" className="absolute inset-0 z-[2]">
         <Suspense fallback={null}>
@@ -407,13 +406,7 @@ export default function Hero({ theme, started }: { theme: Theme; started: boolea
         <Windows reduced={!!reduced} />
       </Landmark>
 
-      {/* floating technology markers in the sky */}
-      <motion.div className="absolute inset-0" style={mid}>
-        <TechIcon label="AWS" icon={techGlyphs.aws} position="right-[40%] top-[14%]" delay="0s" reduced={!!reduced} />
-        <TechIcon label="API" icon={techGlyphs.api} position="right-[15%] top-[30%]" delay="-2s" reduced={!!reduced} />
-        <TechIcon label="SQL" icon={techGlyphs.sql} position="right-[28%] top-[24%]" delay="-3.5s" reduced={!!reduced} />
-        <TechIcon label="DOCKER" icon={techGlyphs.docker} position="right-[6%] top-[36%]" delay="-1.2s" reduced={!!reduced} />
-      </motion.div>
+      {/* floating tech icons removed — clean sky aesthetic */}
 
       {/* animated quality shield */}
       <QualityShield reduced={!!reduced} />
@@ -463,47 +456,35 @@ export default function Hero({ theme, started }: { theme: Theme; started: boolea
           variants={item}
           className="mt-5 flex items-center gap-2 text-sm text-ink"
         >
-          <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="var(--terracotta)" aria-hidden="true">
+          <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="var(--sky-deep)" aria-hidden="true">
             <path d="M8 1a5 5 0 0 0-5 5c0 3.6 5 9 5 9s5-5.4 5-9a5 5 0 0 0-5-5zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
           </svg>
-          Bangkok, Thailand
+          Phetchaburi, Thailand
         </motion.p>
 
-        <motion.ul variants={item} className="mt-6 flex flex-wrap gap-2" aria-label="Availability">
-          {badges.map((b) => (
-            <li
-              key={b}
-              className="rounded-full border border-line bg-card/85 px-3.5 py-1.5 font-mono text-[0.66rem] tracking-wider text-ink-soft backdrop-blur-[2px]"
-            >
-              {b}
-            </li>
-          ))}
-        </motion.ul>
-
-        <motion.div variants={item} className="mt-8 flex flex-wrap gap-4">
-          <a
+        <motion.div variants={item} className="mt-7 flex flex-wrap gap-4">
+          <motion.a
             href="#experience"
-            className="rounded-full bg-forest px-7 py-3 text-sm font-medium tracking-wide text-paper transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(61,107,79,0.35)] dark:text-ink"
+            whileHover={reduced ? undefined : { scale: 1.03, y: -2 }}
+            whileTap={reduced ? undefined : { scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 340, damping: 22 }}
+            className="ripple rounded-full bg-forest px-7 py-3 text-sm font-medium tracking-wide text-paper shadow-[0_4px_16px_rgba(26,120,80,0.28)] dark:text-ink"
           >
             View Experience
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             href="https://github.com/cybersage05"
             target="_blank"
             rel="noreferrer"
-            className="rounded-full border border-forest/50 bg-card/80 px-7 py-3 text-sm font-medium tracking-wide text-forest backdrop-blur-[2px] transition-colors duration-300 hover:bg-forest/10"
+            whileHover={reduced ? undefined : { scale: 1.03, y: -2 }}
+            whileTap={reduced ? undefined : { scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 340, damping: 22 }}
+            className="ripple rounded-full border border-forest/50 bg-card/80 px-7 py-3 text-sm font-medium tracking-wide text-forest backdrop-blur-[2px] transition-colors duration-300 hover:bg-forest/10"
           >
             GitHub
-          </a>
+          </motion.a>
         </motion.div>
 
-        <motion.p
-          variants={item}
-          aria-hidden="true"
-          className="mt-6 hidden font-mono text-[0.6rem] tracking-[0.2em] text-ink-soft/70 lg:block"
-        >
-          ✦ tip — the valley is alive · hover &amp; click the tower, observatory, factory and village
-        </motion.p>
       </motion.div>
 
       <MarginNote className="bottom-16 left-1/2 hidden translate-x-6 sm:flex" arrow="left">

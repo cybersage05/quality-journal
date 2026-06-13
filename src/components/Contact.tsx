@@ -120,7 +120,7 @@ export default function Contact() {
         <FooterHills />
         <footer className="bg-forest pb-6 pt-1 text-center dark:bg-[#1f3528]">
           <p className="font-mono text-[0.64rem] tracking-[0.18em] text-paper/90 dark:text-ink/80">
-            Reevan D'Souza · Software QA &amp; Test Engineer · Bangkok, Thailand
+            Reevan D'Souza · Software QA &amp; Test Engineer · Phetchaburi, Thailand
           </p>
         </footer>
       </div>

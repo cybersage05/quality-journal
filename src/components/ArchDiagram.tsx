@@ -142,9 +142,10 @@ const nodes: NodeDef[] = [
   {
     id: "rptdb",
     name: "Reporting DB",
-    x: 596, y: 338, w: 200, h: 50,
+    sub: "report generation · usage analytics · business reporting",
+    x: 596, y: 338, w: 200, h: 68,
     icon: I.warehouse,
-    note: "Aggregates platform usage data for analytics. Cross-environment record comparisons ran against this database throughout the 1.5-year AWS cloud migration.",
+    note: "Aggregates platform usage data for analytics. Powers report generation, usage analytics and business reporting. Cross-environment record comparisons ran against this database throughout the 1.5-year AWS cloud migration.",
   },
   {
     id: "usage",
@@ -178,8 +179,8 @@ const edges: EdgeDef[] = [
   { d: "M204 492 C204 526 254 526 254 556",           branch: "a",    dur: 3.2, begin: 1.2 },
   { d: "M204 492 C204 526 412 526 412 556",           branch: "a",    dur: 3.8, begin: 0.4 },
   // Path B
-  { d: "M500 280 C570 318 696 318 696 338",           branch: "b",    dur: 4.5, begin: 0.3 },
-  { d: "M696 388 V442",                               branch: "b",    dur: 2.5, begin: 0.7 },
+  { d: "M500 280 C570 318 696 318 696 338",           branch: "b",    dur: 4.0, begin: 0.3 },
+  { d: "M696 406 V442",                               branch: "b",    dur: 2.5, begin: 0.7 },
   { d: "M696 492 V556",                               branch: "b",    dur: 2.5, begin: 0.2 },
 ];
 

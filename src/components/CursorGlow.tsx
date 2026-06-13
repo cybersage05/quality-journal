@@ -47,13 +47,13 @@ export default function CursorGlow() {
   return (
     <motion.div
       aria-hidden="true"
-      className="pointer-events-none fixed z-[55] hidden h-[26rem] w-[26rem] -translate-x-1/2 -translate-y-1/2 rounded-full mix-blend-screen lg:block dark:mix-blend-plus-lighter"
+      className="pointer-events-none fixed z-[55] hidden h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/2 rounded-full mix-blend-screen lg:block dark:mix-blend-plus-lighter"
       style={{
         left: sx,
         top: sy,
         background:
-          "radial-gradient(closest-side, color-mix(in srgb, var(--sky-deep) 30%, transparent), transparent 72%)",
-        opacity: 0.5,
+          "radial-gradient(closest-side, rgba(56,189,248,0.22), transparent 68%)",
+        opacity: 0.65,
       }}
     />
   );

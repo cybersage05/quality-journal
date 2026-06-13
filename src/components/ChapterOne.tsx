@@ -103,17 +103,6 @@ const benefits = [
 
 const facts: { value: number; prefix?: string; suffix?: string; label: string; icon: ReactNode }[] = [
   {
-    value: 24,
-    suffix: "h",
-    label: "root-cause analysis SLA — every defect explained within a day",
-    icon: (
-      <g>
-        <circle cx="12" cy="13" r="8" />
-        <path d="M12 9v4l3 2M12 2v2" />
-      </g>
-    ),
-  },
-  {
     value: 30,
     prefix: "~",
     suffix: "%",
@@ -220,12 +209,12 @@ export default function ChapterOne() {
           <SectionHeader
             eyebrow="Chapter One · Software Validation Engineer · Bangkok"
             title="Validating Software Releases for Global Manufacturing"
-            intro="Every software package released by the customer's development team — Python test code, .NET interaction components and firmware — passes through my validation before it reaches the production floor. I own that gate."
+            intro="Every software package released by the customer's development team — Python test code and firmware — passes through my validation before it reaches the production floor. I own that gate."
           >
             <MetaChips
               items={[
                 { icon: "building", text: "Cal-Comp Electronics · EMS" },
-                { icon: "pin", text: "Bangkok, Thailand" },
+                { icon: "pin", text: "Phetchaburi, Thailand" },
                 { icon: "calendar", text: "2024 – Present" },
                 { icon: "people", text: "Quality Engineering team" },
               ]}
@@ -275,7 +264,7 @@ export default function ChapterOne() {
               </div>
               <Pills items={["Python", "Dash", "SQL Server", "Windows"]} />
               <div className="mt-auto border-t border-line pt-4">
-                <Impact>Manual reporting effort reduced ~40% · In daily use by the team</Impact>
+                <Impact>Real-time quality visibility · In daily use by the team</Impact>
               </div>
             </article>
           </Reveal>
@@ -326,7 +315,7 @@ export default function ChapterOne() {
           <Reveal>
             <p className="eyebrow mb-6 text-center">Field Notes · Measured at Cal-Comp</p>
           </Reveal>
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {facts.map((f, i) => (
               <FactMedallion key={f.label} {...f} delay={i * 0.15} />
             ))}
