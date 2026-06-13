@@ -6,7 +6,6 @@ import Hero from "./components/Hero";
 import ChapterOne from "./components/ChapterOne";
 import ChapterTwo from "./components/ChapterTwo";
 import ChapterThree from "./components/ChapterThree";
-import STLCDiagram from "./components/STLCDiagram";
 import IronProjects from "./components/IronProjects";
 import Timeline from "./components/Timeline";
 import Skills from "./components/Skills";
@@ -30,7 +29,6 @@ export default function App() {
           <Hero theme={theme} started={started} />
           <ChapterOne />
           <ChapterTwo />
-          <STLCDiagram />
           <ChapterThree />
           <IronProjects />
           <Timeline />
