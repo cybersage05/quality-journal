@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { animate, motion, useInView, useReducedMotion } from "framer-motion";
 import { FlowDiagram, type FlowNode } from "./FlowDiagram";
 import ValidationTrail from "./ValidationTrail";
+import ValidationWorkflow from "./ValidationWorkflow";
 import { Impact, LeafCheck, MetaChips, Pills, Reveal, SectionHeader } from "./ui";
 import {
   CoffeeRing,
@@ -216,6 +217,8 @@ export default function ChapterOne() {
           <ValidationTrail />
           <Fig n="02" label="the validation gate, drawn from memory" />
         </div>
+
+        <ValidationWorkflow />
 
         <div className="mt-14 grid items-start gap-6 lg:grid-cols-2">
           <Reveal>
