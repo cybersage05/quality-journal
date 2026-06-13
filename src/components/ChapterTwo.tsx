@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import ArchDiagram from "./ArchDiagram";
-import AgileWorkflow from "./AgileWorkflow";
+import AgileDeliveryEcosystem from "./AgileDeliveryEcosystem";
 import { MetaChips, Pills, Reveal, SectionHeader } from "./ui";
 import {
   Birds,
@@ -382,7 +382,7 @@ export default function ChapterTwo() {
         </Reveal>
 
         <Reveal className="mt-12">
-          <AgileWorkflow />
+          <AgileDeliveryEcosystem />
         </Reveal>
 
         <Sprig
