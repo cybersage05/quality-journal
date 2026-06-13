@@ -423,7 +423,7 @@ export default function Hero({ theme, started }: { theme: Theme; started: boolea
 
         <motion.h1
           variants={item}
-          className="mt-5 max-w-2xl font-display text-[2.3rem] font-semibold leading-[1.1] tracking-wide text-ink sm:text-5xl lg:text-6xl"
+          className="hero-title mt-5 max-w-2xl font-display font-semibold leading-[1.1] tracking-wide text-ink"
         >
           Building{" "}
           <span className="relative inline-block italic text-forest">

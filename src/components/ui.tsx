@@ -1,7 +1,8 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useInView } from "framer-motion";
 import type { ReactNode } from "react";
+import { useRef } from "react";
 
-/** Gentle scroll-entry fade — translateY + opacity, calm and deliberate. */
+/** Cinematic scroll-entry reveal — blur lift + snappy spring easing. */
 export function Reveal({
   children,
   delay = 0,
@@ -16,10 +17,10 @@ export function Reveal({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, delay, ease: "easeOut" }}
+      initial={{ opacity: 0, y: 40, filter: "blur(6px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.65, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
     </motion.div>
@@ -40,16 +41,25 @@ export function SectionHeader({
   align?: "left" | "center";
   children?: ReactNode;
 }) {
+  const reduced = useReducedMotion();
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+
   return (
     <Reveal className={align === "center" ? "text-center" : ""}>
       <p className="eyebrow">{eyebrow}</p>
-      <h2 className="mt-3 font-display text-[1.7rem] font-semibold leading-[1.18] tracking-wide text-ink sm:text-4xl">
+      <h2 className="section-title mt-3 font-display font-semibold leading-[1.18] tracking-wide text-ink">
         {title}
       </h2>
-      <span
-        aria-hidden="true"
-        className={`mt-3 block h-px w-16 bg-gold/70 ${align === "center" ? "mx-auto" : ""}`}
-      />
+      <span ref={ref} aria-hidden="true" className={`mt-3 block h-px overflow-hidden ${align === "center" ? "mx-auto" : ""}`} style={{ width: 64 }}>
+        <motion.span
+          className="block h-full bg-gold/70"
+          initial={reduced ? { scaleX: 1 } : { scaleX: 0 }}
+          animate={inView ? { scaleX: 1 } : undefined}
+          style={{ transformOrigin: align === "center" ? "center" : "left" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+        />
+      </span>
       {intro && (
         <p
           className={`mt-4 max-w-xl text-[0.85rem] leading-[1.7] text-ink-soft ${

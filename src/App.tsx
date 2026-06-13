@@ -13,6 +13,7 @@ import Contact from "./components/Contact";
 import { useTheme } from "./hooks/useTheme";
 import { PointerProvider } from "./hooks/usePointer";
 import { JournalRail } from "./components/decor";
+import ScrollJourney from "./components/ScrollJourney";
 
 export default function App() {
   const [theme, toggleTheme] = useTheme();
@@ -25,6 +26,7 @@ export default function App() {
         <CursorGlow />
         <Nav theme={theme} onToggleTheme={toggleTheme} />
         <JournalRail />
+        <ScrollJourney />
         <main>
           <Hero theme={theme} started={started} />
           <ChapterOne />

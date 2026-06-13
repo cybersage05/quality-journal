@@ -158,6 +158,16 @@ body {
   color: var(--forest);
 }
 
+/* Fluid responsive section heading — scales from mobile to 4K */
+.section-title {
+  font-size: clamp(1.55rem, 3.5vw, 2.8rem);
+}
+
+/* Fluid hero headline — bigger range */
+.hero-title {
+  font-size: clamp(2rem, 5.5vw, 4.5rem);
+}
+
 /* Paper grain — barely-there texture */
 .grain::before {
   content: "";
