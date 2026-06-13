@@ -1,7 +1,8 @@
 import { Suspense, lazy, useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import type { ReactNode } from "react";
 import type { Theme } from "../hooks/useTheme";
-import { Birds, Cloud, Dragonfly, MarginNote, PineCluster } from "./decor";
+import { MarginNote } from "./decor";
 
 const HillScene = lazy(() => import("./HillScene"));
 
@@ -28,12 +29,42 @@ function TypedLine({ start }: { start: boolean }) {
   }, [reduced, start]);
 
   return (
-    <p className="font-mono text-[0.8rem] leading-6 text-ink-soft sm:text-sm" aria-label={TYPED_LINE}>
+    <p className="font-mono text-[0.8rem] leading-6 text-ink sm:text-sm" aria-label={TYPED_LINE}>
       <span aria-hidden="true">
         {TYPED_LINE.slice(0, n)}
         <span className="type-cursor text-gold">|</span>
       </span>
     </p>
+  );
+}
+
+/* Floating system annotation pinned to a landmark in the painting */
+function SystemTag({
+  label,
+  icon,
+  className,
+  delay = "0s",
+}: {
+  label: string;
+  icon: ReactNode;
+  className?: string;
+  delay?: string;
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`float-bob pointer-events-none absolute hidden flex-col items-center gap-1.5 lg:flex ${className ?? ""}`}
+      style={{ animationDelay: delay }}
+    >
+      <span className="flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-white/80 bg-white/15 text-white shadow-[0_2px_12px_rgba(20,40,56,0.25)] backdrop-blur-[2px]">
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          {icon}
+        </svg>
+      </span>
+      <span className="rounded-full bg-[#142838]/55 px-2.5 py-0.5 font-mono text-[0.58rem] tracking-[0.22em] text-white backdrop-blur-[2px]">
+        {label}
+      </span>
+    </div>
   );
 }
 
@@ -50,6 +81,8 @@ const item = {
 
 export default function Hero({ theme, started }: { theme: Theme; started: boolean }) {
   const reduced = useReducedMotion();
+  const { scrollY } = useScroll();
+  const imgY = useTransform(scrollY, [0, 900], [0, reduced ? 0 : 140]);
 
   return (
     <section
@@ -57,49 +90,55 @@ export default function Hero({ theme, started }: { theme: Theme; started: boolea
       aria-label="Introduction"
       className="relative flex min-h-screen items-center overflow-hidden"
     >
-      {/* Watercolor sky wash — deep blue overhead melting into paper */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-b from-sky-deep via-sky to-paper"
-      />
+      {/* The painted valley — telecom tower, observatory, factory, village */}
+      <motion.div aria-hidden="true" className="absolute inset-0" style={{ y: imgY }}>
+        <img
+          src={`${import.meta.env.BASE_URL}landscape.webp`}
+          alt=""
+          fetchPriority="high"
+          className="h-[115%] w-full object-cover object-[center_38%] transition-[filter] duration-500 dark:brightness-[.45] dark:saturate-[.75] dark:hue-rotate-[10deg]"
+        />
+        {/* legibility wash — left side */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-white/18 to-transparent dark:from-[#142838]/72 dark:via-[#142838]/28" />
+        {/* atmospheric depth — warm haze in the mid-distance */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_110%_55%_at_55%_42%,transparent_38%,rgba(239,232,214,0.16)_100%)] dark:bg-[radial-gradient(ellipse_110%_55%_at_55%_42%,transparent_38%,rgba(20,40,56,0.22)_100%)]" />
+        {/* sky depth — subtle top-edge veil */}
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-sky/12 to-transparent dark:from-[#142838]/30 dark:to-transparent" />
+        {/* paper rise from below */}
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-paper" />
+      </motion.div>
 
-      {/* Living sky — haze plus painted clouds in three depths */}
-      <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-        <div className="cloud absolute left-[8%] top-[12%] h-24 w-72 rounded-full bg-white/40 blur-3xl dark:bg-white/[0.04]" />
-        <div className="cloud absolute right-[12%] top-[24%] h-20 w-96 rounded-full bg-white/30 blur-3xl [animation-delay:-20s] dark:bg-white/[0.03]" />
-        <Cloud className="cloud-cross absolute left-0 top-[9%] w-40 sm:w-56" opacity={0.85} />
-        <Cloud className="cloud-cross absolute left-0 top-[26%] w-28 blur-[1px] sm:w-40 [animation-delay:-60s] [animation-duration:200s]" opacity={0.6} />
-        <Cloud className="cloud float-bob absolute right-[6%] top-[16%] w-36 sm:w-52" opacity={0.75} />
-        <Cloud className="cloud absolute left-[18%] top-[34%] w-24 blur-[2px] sm:w-36 [animation-delay:-35s]" opacity={0.45} />
-      </div>
-
-      {/* Pale watercolor sun */}
-      <div
-        aria-hidden="true"
-        className="absolute right-[14%] top-[14%] h-24 w-24 rounded-full bg-gold/30 blur-xl sm:h-32 sm:w-32"
-      />
-
-      {/* Three.js hills + fireflies */}
+      {/* living particles over the painting — petals & faint fireflies */}
       <div aria-hidden="true" className="absolute inset-0">
         <Suspense fallback={null}>
-          <HillScene theme={theme} reduced={!!reduced} />
+          <HillScene theme={theme} reduced={!!reduced} imageMode />
         </Suspense>
       </div>
 
-      {/* Midground — distant birds over the hills */}
-      <Birds className="right-[8%] top-[18%] h-12 w-32 sm:right-[22%] sm:h-16 sm:w-44" />
-      <Birds className="left-[12%] top-[30%] hidden h-10 w-24 opacity-70 sm:block" />
-
-      {/* Foreground — pines anchoring the corners, meadow ahead of the hills */}
-      <PineCluster className="absolute -right-6 bottom-6 z-[5] hidden opacity-90 lg:block" />
-      <PineCluster className="absolute -left-10 bottom-2 z-[5] hidden scale-75 opacity-60 xl:block" />
-      <Dragonfly className="hover-drift absolute bottom-[30%] right-[10%] z-[5] hidden h-9 w-14 lg:block" />
+      {/* system annotations pinned to the painting's landmarks */}
+      <SystemTag
+        label="TELECOM SYSTEMS"
+        className="right-[9%] top-[22%]"
+        icon={<g><path d="M12 21V9M8 21h8" /><path d="M5 7a9 9 0 0 1 14 0M7.5 9.5a5.5 5.5 0 0 1 9 0" /></g>}
+      />
+      <SystemTag
+        label="CLOUD INFRASTRUCTURE"
+        className="right-[30%] top-[10%]"
+        delay="-2.5s"
+        icon={<path d="M8 19a5 5 0 0 1 1-9.9A6.5 6.5 0 0 1 21.5 11 4.5 4.5 0 0 1 21 19z" />}
+      />
+      <SystemTag
+        label="QUALITY ENGINEERING"
+        className="bottom-[26%] right-[18%]"
+        delay="-4s"
+        icon={<g><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" /><path d="M9 12l2.2 2.2L15.5 10" /></g>}
+      />
 
       <motion.div
         variants={stagger}
         initial={reduced ? "show" : "hidden"}
         animate={started ? "show" : undefined}
-        className="relative z-10 mx-auto w-full max-w-6xl px-5 pb-24 pt-28 sm:px-8"
+        className="relative z-10 mx-auto w-full max-w-6xl px-5 pb-32 pt-28 sm:px-8"
       >
         <motion.p variants={item} className="eyebrow">
           Software QA &amp; Test Engineer
@@ -138,7 +177,7 @@ export default function Hero({ theme, started }: { theme: Theme; started: boolea
 
         <motion.p
           variants={item}
-          className="mt-5 flex items-center gap-2 text-sm text-ink-soft"
+          className="mt-5 flex items-center gap-2 text-sm text-ink"
         >
           <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="var(--terracotta)" aria-hidden="true">
             <path d="M8 1a5 5 0 0 0-5 5c0 3.6 5 9 5 9s5-5.4 5-9a5 5 0 0 0-5-5zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
@@ -150,7 +189,7 @@ export default function Hero({ theme, started }: { theme: Theme; started: boolea
           {badges.map((b) => (
             <li
               key={b}
-              className="rounded-full border border-line bg-card/80 px-3.5 py-1.5 font-mono text-[0.66rem] tracking-wider text-ink-soft"
+              className="rounded-full border border-line bg-card/85 px-3.5 py-1.5 font-mono text-[0.66rem] tracking-wider text-ink-soft backdrop-blur-[2px]"
             >
               {b}
             </li>
@@ -168,7 +207,7 @@ export default function Hero({ theme, started }: { theme: Theme; started: boolea
             href="https://github.com/cybersage05"
             target="_blank"
             rel="noreferrer"
-            className="rounded-full border border-forest/50 bg-card/70 px-7 py-3 text-sm font-medium tracking-wide text-forest transition-colors duration-300 hover:bg-forest/10"
+            className="rounded-full border border-forest/50 bg-card/80 px-7 py-3 text-sm font-medium tracking-wide text-forest backdrop-blur-[2px] transition-colors duration-300 hover:bg-forest/10"
           >
             GitHub
           </a>

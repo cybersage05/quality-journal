@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { animate, useInView, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
-import { CloudBank, Contours, WaveDivider } from "./decor";
+import { Contours } from "./decor";
 
 /* Tiny hand-sketched glyphs above each field number */
 const glyphs: Record<string, ReactNode> = {
@@ -75,28 +75,24 @@ function Stat({ value, suffix, label, glyph }: (typeof stats)[number]) {
 
 export default function Stats() {
   return (
-    <section
-      id="stats"
-      aria-label="Career statistics"
-      className="relative overflow-hidden bg-[color-mix(in_srgb,var(--sky)_45%,var(--paper))]"
-    >
-      <WaveDivider fill="var(--paper)" />
-      <WaveDivider fill="var(--paper)" flip />
-      <CloudBank className="top-4 opacity-80" />
-      <Contours className="-left-20 -top-32 h-[28rem] w-[28rem] opacity-50" />
-      <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-        <p
-          aria-hidden="true"
-          className="hand mb-7 text-center text-xl text-ink-soft opacity-80"
-        >
-          ~ field numbers, measured not estimated ~
-        </p>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-5">
-          {stats.map((s) => (
-            <Stat key={s.label} {...s} />
-          ))}
+    <section id="stats" aria-label="Career statistics" className="relative bg-paper">
+      <Contours className="-left-20 -top-24 h-[26rem] w-[26rem] opacity-40" />
+      <div className="relative z-20 mx-auto -mt-24 max-w-6xl px-5 sm:px-8">
+        <div className="rounded-2xl border border-white/50 bg-card/75 px-5 py-10 shadow-[0_12px_40px_rgba(20,40,56,0.14)] backdrop-blur-md dark:border-line">
+          <p
+            aria-hidden="true"
+            className="hand mb-7 text-center text-xl text-ink-soft opacity-80"
+          >
+            ~ field numbers, measured not estimated ~
+          </p>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-5">
+            {stats.map((s) => (
+              <Stat key={s.label} {...s} />
+            ))}
+          </div>
         </div>
       </div>
+      <div className="h-16" />
     </section>
   );
 }

@@ -329,15 +329,19 @@ function MouseRig({ animate }: { animate: boolean }) {
 }
 
 /**
- * Ambient depth behind the hero — watercolor hills in fog, drifting cloud
- * sprites, gold fireflies and wind-blown petals. Eases toward the pointer.
+ * Ambient depth behind the hero. In `imageMode` the painted landscape image
+ * provides the scenery, so only living particles render on top — wind-blown
+ * petals and faint gold sparks. Otherwise: watercolor hills in fog with
+ * drifting cloud sprites. Eases toward the pointer.
  */
 export default function HillScene({
   theme,
   reduced,
+  imageMode = false,
 }: {
   theme: Theme;
   reduced: boolean;
+  imageMode?: boolean;
 }) {
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
   const animate = !reduced;
@@ -351,11 +355,19 @@ export default function HillScene({
       style={{ pointerEvents: "none" }}
       eventSource={typeof document !== "undefined" ? document.body : undefined}
     >
-      {!isMobile && <fog attach="fog" args={[palettes[theme].fog, 6, 26]} />}
-      <Hills theme={theme} animate={animate} />
-      <Clouds theme={theme} animate={animate} />
-      <Fireflies theme={theme} count={isMobile ? 8 : 16} animate={animate} />
-      <Petals theme={theme} count={isMobile ? 10 : 22} animate={animate} />
+      {!imageMode && !isMobile && <fog attach="fog" args={[palettes[theme].fog, 6, 26]} />}
+      {!imageMode && <Hills theme={theme} animate={animate} />}
+      {!imageMode && <Clouds theme={theme} animate={animate} />}
+      <Fireflies
+        theme={theme}
+        count={imageMode ? (isMobile ? 5 : 10) : isMobile ? 8 : 16}
+        animate={animate}
+      />
+      <Petals
+        theme={theme}
+        count={imageMode ? (isMobile ? 8 : 18) : isMobile ? 10 : 22}
+        animate={animate}
+      />
       {!isMobile && <MouseRig animate={animate} />}
     </Canvas>
   );
