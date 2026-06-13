@@ -17,6 +17,7 @@ interface EcoNode {
   title: string;
   abbr: string;
   desc: string;
+  descParas?: string[];
   details: string[];
   variant: Variant;
   icon: ReactNode;
@@ -55,6 +56,13 @@ const PATHS = [
   { id: "mw-val",   d: "M358,497 C355,535 465,550 490,565",              delay: 0.7, dur: "2.8s" },
   { id: "ch-val",   d: "M642,497 C645,535 535,550 510,565",              delay: 0.7, dur: "2.8s" },
   { id: "db-val",   d: "M884,497 C888,535 542,550 522,565",              delay: 0.7, dur: "3.2s" },
+];
+
+/* Horizontal transaction chain — API → MW → CH → DB (gold, active when SFF selected) */
+const FEATURE_FLOW_PATHS = [
+  { id: "ff-api-mw", d: "M118,475 L342,475", dur: "1.1s", delay: 0.0 },
+  { id: "ff-mw-ch",  d: "M378,475 L622,475", dur: "1.1s", delay: 0.35 },
+  { id: "ff-ch-db",  d: "M658,475 L882,475", dur: "1.1s", delay: 0.70 },
 ];
 
 /* ── Node definitions ───────────────────────────────────────── */
@@ -101,9 +109,32 @@ const NODES: EcoNode[] = [
   },
   {
     id: "sff", abbr: "Service Fee Feature",
-    title: "Service Fee Feature",
-    desc: "A new transaction service fee required coordinated updates across multiple enterprise services to ensure accurate processing and seamless customer experience.",
-    details: ["Cross-system integration", "Business rule validation", "Compatibility verification", "End-to-end workflows"],
+    title: "Service Fee Feature Delivery",
+    desc: "A new business requirement introduced a transaction service fee during customer top-up operations, automatically deducted as part of the transaction flow across multiple enterprise systems.",
+    descParas: [
+      "A new business requirement introduced a transaction service fee during customer top-up operations, where a predefined fee would be automatically deducted as part of the transaction flow.",
+      "Implementing this feature required coordinated updates across multiple enterprise systems — APIs, charging services, middleware components, and databases — to ensure consistent transaction processing.",
+      "As part of the Agile delivery team, collaborated closely with Development, Testing, and Systems teams to analyze impacts, validate integrations, and ensure seamless end-to-end workflows.",
+      "Performed integration testing to verify that transactions propagated correctly across systems, service fees were applied according to business rules, and transaction data remained synchronized throughout the ecosystem.",
+      "Validated API behavior, database updates, and cross-system interactions to ensure backward compatibility and prevent unintended impacts on existing services.",
+      "Executed system testing, functional testing, user acceptance testing (UAT), and regression testing to verify feature correctness across multiple scenarios.",
+      "Worked with development teams to investigate defects, validate fixes, and continuously improve feature stability until production readiness was achieved.",
+      "Successfully delivered the feature with reliability, stability, and customer experience as key priorities.",
+    ],
+    details: [
+      "Business rule validation",
+      "Transaction flow verification",
+      "API testing & validation",
+      "Database consistency checks",
+      "Integration testing",
+      "System testing",
+      "Functional testing",
+      "UAT",
+      "Regression testing",
+      "Defect investigation",
+      "Root cause analysis",
+      "Production readiness",
+    ],
     variant: "feature",
     icon: <g><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></g>,
   },
@@ -221,7 +252,7 @@ function ChecklistItem({ text, delay }: { text: string; delay: number }) {
 
 /* ── Desktop network SVG overlay ───────────────────────────── */
 
-function NetworkSVG({ reduced }: { reduced: boolean }) {
+function NetworkSVG({ reduced, sffActive }: { reduced: boolean; sffActive: boolean }) {
   return (
     <svg
       viewBox="0 0 1000 600"
@@ -238,13 +269,18 @@ function NetworkSVG({ reduced }: { reduced: boolean }) {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+        <filter id="gold-glow" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="4.5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
       </defs>
 
       {PATHS.map((p, i) => (
         <Fragment key={p.id}>
-          {/* Ghost track */}
           <path d={p.d} stroke="var(--sky-deep)" strokeWidth="1" opacity="0.12" strokeLinecap="round" />
-          {/* Scroll-revealed live path */}
           <motion.path
             d={p.d}
             stroke="var(--sky-deep)"
@@ -255,10 +291,29 @@ function NetworkSVG({ reduced }: { reduced: boolean }) {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.9, delay: p.delay + i * 0.01 }}
           />
-          {/* Flowing particle */}
           {!reduced && (
             <circle r="3.5" fill="var(--sky-deep)" filter="url(#eco-glow)">
               <animateMotion dur={p.dur} repeatCount="indefinite" path={p.d} />
+            </circle>
+          )}
+        </Fragment>
+      ))}
+
+      {/* Transaction chain — lights up gold when Service Fee Feature is active */}
+      {FEATURE_FLOW_PATHS.map((p) => (
+        <Fragment key={p.id}>
+          <path d={p.d} stroke="var(--gold)" strokeWidth="1" opacity="0.12" strokeLinecap="round" strokeDasharray="4 4" />
+          <motion.path
+            d={p.d}
+            stroke="var(--gold)"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            animate={sffActive ? { opacity: 0.82, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
+            transition={{ duration: 0.6, delay: sffActive ? p.delay : 0, ease: "easeOut" }}
+          />
+          {!reduced && sffActive && (
+            <circle r="4.5" fill="var(--gold)" filter="url(#gold-glow)">
+              <animateMotion dur={p.dur} begin={`${p.delay}s`} repeatCount="indefinite" path={p.d} />
             </circle>
           )}
         </Fragment>
@@ -389,10 +444,21 @@ function DetailCard({
       aria-label={`${node.title} details`}
     >
       <div className="flex items-start justify-between gap-4">
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <p className="font-mono text-[0.55rem] tracking-[0.3em] text-sky-deep">{node.variant.toUpperCase()}</p>
           <h4 className="mt-0.5 font-display text-[1.1rem] font-semibold tracking-wide text-ink">{node.title}</h4>
-          <p className="mt-2 max-w-xl text-[0.83rem] leading-[1.72] text-ink-soft">{node.desc}</p>
+          {node.descParas ? (
+            <div className="relative mt-2">
+              <div className="max-h-[148px] space-y-2 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-[3px] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-line/60">
+                {node.descParas.map((para, i) => (
+                  <p key={i} className="text-[0.79rem] leading-[1.65] text-ink-soft">{para}</p>
+                ))}
+              </div>
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-5 bg-gradient-to-t from-paper/95 to-transparent" />
+            </div>
+          ) : (
+            <p className="mt-2 text-[0.83rem] leading-[1.72] text-ink-soft">{node.desc}</p>
+          )}
         </div>
         <button
           type="button"
@@ -421,6 +487,21 @@ function DetailCard({
             </li>
           ))}
         </ul>
+      )}
+
+      {/* Success badge — shown only for the Service Fee Feature node */}
+      {node.id === "sff" && (
+        <motion.div
+          className="mt-4 flex items-center gap-2 self-start rounded-full border border-gold/40 bg-gold/10 px-3 py-1.5"
+          initial={{ opacity: 0, scale: 0.88 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 shrink-0 text-gold" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M2 8l4 4 8-8" />
+          </svg>
+          <span className="font-mono text-[0.58rem] tracking-[0.18em] text-gold">ALL SYSTEMS VALIDATED</span>
+        </motion.div>
       )}
     </div>
   );
@@ -529,7 +610,15 @@ function MobileCard({
           className="overflow-hidden"
         >
           <div className="border-t border-line px-4 pb-4 pt-3">
-            <p className="text-[0.82rem] leading-[1.65] text-ink-soft">{node.desc}</p>
+            {node.descParas ? (
+              <div className="space-y-2">
+                {node.descParas.map((para, i) => (
+                  <p key={i} className="text-[0.79rem] leading-[1.65] text-ink-soft">{para}</p>
+                ))}
+              </div>
+            ) : (
+              <p className="text-[0.82rem] leading-[1.65] text-ink-soft">{node.desc}</p>
+            )}
             <ul className="mt-3 space-y-1.5">
               {node.details.map((d, di) => (
                 isVal
@@ -597,8 +686,8 @@ export default function AgileDeliveryEcosystem() {
           Agile Delivery Ecosystem
         </h3>
         <p className="mx-auto mt-3 max-w-2xl text-center text-[0.84rem] leading-[1.7] text-ink-soft">
-          Delivering enterprise features through collaboration, validation, and continuous feedback
-          in Agile environments.
+          From business requirement to production — coordinating validation across APIs, charging services,
+          middleware, and databases in an Agile enterprise environment. Click any node to explore.
         </p>
       </Reveal>
 
@@ -608,7 +697,7 @@ export default function AgileDeliveryEcosystem() {
       <div className="mt-10 hidden lg:block" aria-label="Enterprise delivery network — click nodes to expand">
         <div className="relative min-h-[600px] w-full" role="group" aria-label="Delivery network nodes">
           {/* SVG paths + particles */}
-          <NetworkSVG reduced={!!reduced} />
+          <NetworkSVG reduced={!!reduced} sffActive={active === "sff"} />
 
           {/* Node buttons */}
           {NODES.map((node) => {
