@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Pills, Reveal, SectionHeader } from "./ui";
-import { Contours, Sprig, WaveDivider } from "./decor";
+import { Contours, Parallax, SectionStage, Sprig, WaveDivider } from "./decor";
 
 /* Hand-drawn toolshed icons, one per group */
 const icons: Record<string, ReactNode> = {
@@ -97,10 +97,12 @@ export default function Skills() {
     >
       <WaveDivider fill="var(--paper)" />
       <WaveDivider fill="var(--paper)" flip />
-      <Contours className="-right-32 top-[18%] h-[30rem] w-[30rem] opacity-45" />
-      <Sprig className="absolute left-4 top-24 hidden h-24 w-14 rotate-6 xl:block" />
+      <Parallax speed={0.28} className="absolute -right-32 top-[18%]">
+        <Contours className="relative h-[30rem] w-[30rem] opacity-45" />
+      </Parallax>
+      <Sprig className="sway absolute left-4 top-24 hidden h-24 w-14 rotate-6 xl:block" />
 
-      <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
+      <SectionStage className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
         <SectionHeader eyebrow="The Toolshed" title="Skills & Instruments" />
         <p aria-hidden="true" className="hand mt-4 text-xl text-ink-soft opacity-80">
           every tool earned its place on this wall
@@ -137,7 +139,7 @@ export default function Skills() {
             </Reveal>
           ))}
         </div>
-      </div>
+      </SectionStage>
     </section>
   );
 }

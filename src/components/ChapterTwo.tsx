@@ -10,6 +10,7 @@ import {
   Fig,
   GhostNumeral,
   Parallax,
+  SectionStage,
   Sprig,
   TowerScene,
   WaveDivider,
@@ -226,10 +227,12 @@ export default function ChapterTwo() {
       <Parallax speed={0.3} className="absolute -right-36 top-[12%]">
         <Contours className="relative h-[36rem] w-[36rem] opacity-50" />
       </Parallax>
-      <Contours className="-left-28 bottom-[6%] h-[30rem] w-[30rem] rotate-90 opacity-40" />
-      <Birds className="right-[10%] top-24 hidden h-12 w-32 md:block" />
+      <Parallax speed={-0.22} className="absolute -left-28 bottom-[6%]">
+        <Contours className="relative h-[30rem] w-[30rem] rotate-90 opacity-40" />
+      </Parallax>
+      <Birds className="float-bob right-[10%] top-24 hidden h-12 w-32 md:block" />
 
-      <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
+      <SectionStage className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
         <div className="grid items-start gap-8 lg:grid-cols-[1fr_14rem]">
           <SectionHeader
             eyebrow="Chapter Two · Solution Integrator · Bangalore"
@@ -390,10 +393,10 @@ export default function ChapterTwo() {
         </Reveal>
 
         <Sprig
-          className="absolute bottom-10 right-4 hidden h-24 w-14 -rotate-6 lg:block"
+          className="sway absolute bottom-10 right-4 hidden h-24 w-14 -rotate-6 lg:block"
           flip
         />
-      </div>
+      </SectionStage>
     </section>
   );
 }

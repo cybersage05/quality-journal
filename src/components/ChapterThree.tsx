@@ -8,6 +8,7 @@ import {
   MeadowEdge,
   Parallax,
   RobotScene,
+  SectionStage,
 } from "./decor";
 
 const rpaFlow: FlowNode[] = [
@@ -34,9 +35,11 @@ export default function ChapterThree() {
       className="relative overflow-hidden bg-paper pb-16"
     >
       <GhostNumeral n="03" className="-top-4 right-2 sm:right-10" />
-      <Contours className="-left-24 top-[20%] h-[28rem] w-[28rem] opacity-45" />
+      <Parallax speed={0.28} className="absolute -left-24 top-[20%]">
+        <Contours className="relative h-[28rem] w-[28rem] opacity-45" />
+      </Parallax>
 
-      <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+      <SectionStage className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
         <div className="grid items-start gap-8 lg:grid-cols-[1fr_14rem]">
           <SectionHeader
             eyebrow="Chapter Three · Automation Engineer · Remote"
@@ -75,7 +78,7 @@ export default function ChapterThree() {
           <Pills items={["UiPath", "Selenium", "Python", "ERP/SCM Integration"]} />
           <Impact>75% manual processing load eliminated</Impact>
         </Reveal>
-      </div>
+      </SectionStage>
 
       <MeadowEdge />
     </section>

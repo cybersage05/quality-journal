@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Impact, Pills, Reveal, SectionHeader } from "./ui";
-import { CloudBank, Contours, Stamp, Tape, WaveDivider } from "./decor";
+import { CloudBank, Contours, Parallax, SectionStage, Stamp, Tape, WaveDivider } from "./decor";
 import GlassTilt from "./GlassTilt";
 
 /* Icon-led story row, shared visual language with the chapter cards */
@@ -105,7 +105,9 @@ export default function IronProjects() {
       <WaveDivider fill="var(--paper)" />
       <WaveDivider fill="var(--paper)" flip />
       <CloudBank className="top-10 opacity-60" />
-      <Contours className="-right-28 -top-20 h-[26rem] w-[26rem] opacity-50" />
+      <Parallax speed={0.26} className="absolute -right-28 -top-20">
+        <Contours className="relative h-[26rem] w-[26rem] opacity-50" />
+      </Parallax>
       {/* Gold wax-seal medallion */}
       <svg
         viewBox="0 0 120 120"
@@ -119,7 +121,7 @@ export default function IronProjects() {
         <text x="60" y="104" textAnchor="middle" fontSize="9" fontFamily="var(--font-mono)" letterSpacing="2" fill="var(--gold)" opacity=".8">EST. 2026</text>
       </svg>
 
-      <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
+      <SectionStage className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
         <SectionHeader
           eyebrow="Built for Iron Software · 2026"
           title="Going Beyond the Brief"
@@ -217,7 +219,7 @@ export default function IronProjects() {
         <Reveal className="mt-8 text-center">
           <Impact>Both projects public, documented and reviewable — built the way I test: evidence first.</Impact>
         </Reveal>
-      </div>
+      </SectionStage>
     </section>
   );
 }

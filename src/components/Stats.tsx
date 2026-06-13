@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { animate, useInView, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
-import { Contours } from "./decor";
+import { Contours, Parallax } from "./decor";
 
 /* Tiny hand-sketched glyphs above each field number */
 const glyphs: Record<string, ReactNode> = {
@@ -76,7 +76,9 @@ function Stat({ value, suffix, label, glyph }: (typeof stats)[number]) {
 export default function Stats() {
   return (
     <section id="stats" aria-label="Career statistics" className="relative bg-paper">
-      <Contours className="-left-20 -top-24 h-[26rem] w-[26rem] opacity-40" />
+      <Parallax speed={0.2} className="absolute -left-20 -top-24">
+        <Contours className="relative h-[26rem] w-[26rem] opacity-40" />
+      </Parallax>
       <div className="relative z-20 mx-auto -mt-24 max-w-6xl px-5 sm:px-8">
         <div className="rounded-2xl border border-white/50 bg-card/75 px-5 py-10 shadow-[0_12px_40px_rgba(20,40,56,0.14)] backdrop-blur-md dark:border-line">
           <p

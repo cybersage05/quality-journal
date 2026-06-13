@@ -12,6 +12,7 @@ import Timeline from "./components/Timeline";
 import Skills from "./components/Skills";
 import Contact from "./components/Contact";
 import { useTheme } from "./hooks/useTheme";
+import { PointerProvider } from "./hooks/usePointer";
 import { JournalRail } from "./components/decor";
 
 export default function App() {
@@ -19,22 +20,24 @@ export default function App() {
   const [started, setStarted] = useState(false);
 
   return (
-    <div className="grain">
-      <Loader onDone={() => setStarted(true)} />
-      <CursorGlow />
-      <Nav theme={theme} onToggleTheme={toggleTheme} />
-      <JournalRail />
-      <main>
-        <Hero theme={theme} started={started} />
-        <Stats />
-        <ChapterOne />
-        <ChapterTwo />
-        <ChapterThree />
-        <IronProjects />
-        <Timeline />
-        <Skills />
-        <Contact />
-      </main>
-    </div>
+    <PointerProvider>
+      <div className="grain">
+        <Loader onDone={() => setStarted(true)} />
+        <CursorGlow />
+        <Nav theme={theme} onToggleTheme={toggleTheme} />
+        <JournalRail />
+        <main>
+          <Hero theme={theme} started={started} />
+          <Stats />
+          <ChapterOne />
+          <ChapterTwo />
+          <ChapterThree />
+          <IronProjects />
+          <Timeline />
+          <Skills />
+          <Contact />
+        </main>
+      </div>
+    </PointerProvider>
   );
 }

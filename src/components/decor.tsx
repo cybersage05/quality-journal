@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { usePointer } from "../hooks/usePointer";
 
 /*
  * Illustrated-journal decoration library.
@@ -23,14 +24,77 @@ export function Parallax({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  const { x: pointerX, y: pointerY } = usePointer();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [speed * 120, speed * -120]);
+  const scrollY = useTransform(scrollYProgress, [0, 1], [speed * 120, speed * -120]);
+  const px = useTransform(pointerX, [-0.5, 0.5], [speed * 70, speed * -70]);
+  const py = useTransform(pointerY, [-0.5, 0.5], [speed * 45, speed * -45]);
+  const y = useTransform([scrollY, py], ([s, p]: number[]) => s + p);
   if (reduced) return <div className={className}>{children}</div>;
   return (
-    <motion.div ref={ref} style={{ y }} className={className}>
+    <motion.div ref={ref} style={{ x: px, y }} className={className}>
+      {children}
+    </motion.div>
+  );
+}
+
+/**
+ * Cursor-reactive parallax — children drift with the pointer at `depth` px
+ * (negative `depth` moves against the cursor for far layers). Reads the shared
+ * pointer springs, so the whole world feels three-dimensional as the mouse
+ * moves. Decorative layers only; no movement under reduced-motion.
+ */
+export function PointerParallax({
+  children,
+  depth = 14,
+  className,
+}: {
+  children: ReactNode;
+  depth?: number;
+  className?: string;
+}) {
+  const { x, y } = usePointer();
+  const tx = useTransform(x, [-0.5, 0.5], [depth, -depth]);
+  const ty = useTransform(y, [-0.5, 0.5], [depth * 0.66, depth * -0.66]);
+  return (
+    <motion.div style={{ x: tx, y: ty }} className={className}>
+      {children}
+    </motion.div>
+  );
+}
+
+/**
+ * Scroll-driven "camera" stage for a section's content — a gentle lift, fade
+ * and depth-scale as the section enters and leaves the viewport, so scrolling
+ * reads like a slow camera move through the world. Keeps text crisp (settles
+ * to scale 1). No transform under reduced-motion.
+ */
+export function SectionStage({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const opacity = useTransform(scrollYProgress, [0, 0.14, 0.88, 1], [0.7, 1, 1, 0.82]);
+  const scale = useTransform(scrollYProgress, [0, 0.14, 0.92, 1], [0.985, 1, 1, 0.994]);
+  const y = useTransform(scrollYProgress, [0, 0.14], [40, 0]);
+  if (reduced) return <div className={className}>{children}</div>;
+  return (
+    <motion.div
+      ref={ref}
+      style={{ opacity, scale, y, willChange: "transform, opacity" }}
+      className={className}
+    >
       {children}
     </motion.div>
   );

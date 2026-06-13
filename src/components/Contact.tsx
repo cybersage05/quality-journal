@@ -1,5 +1,5 @@
 import { Reveal } from "./ui";
-import { Birds, Cloud, CompassRose, Contours, Pine } from "./decor";
+import { Birds, Cloud, CompassRose, Contours, Parallax, Pine, SectionStage } from "./decor";
 
 const items = [
   { icon: "✉", label: "reevan5dsouza@gmail.com", href: "mailto:reevan5dsouza@gmail.com" },
@@ -48,12 +48,16 @@ function FooterHills() {
 export default function Contact() {
   return (
     <section id="contact" aria-label="Contact" className="relative overflow-hidden bg-paper">
-      <Contours className="-left-28 top-10 h-[26rem] w-[26rem] opacity-45" />
-      <CompassRose className="right-[7%] top-24 hidden h-20 w-20 md:block" />
+      <Parallax speed={0.26} className="absolute -left-28 top-10">
+        <Contours className="relative h-[26rem] w-[26rem] opacity-45" />
+      </Parallax>
+      <Parallax speed={0.16} className="absolute right-[7%] top-24 hidden h-20 w-20 md:block">
+        <CompassRose className="!relative h-full w-full" />
+      </Parallax>
       <Cloud className="cloud absolute left-[12%] top-10 w-36 opacity-60 blur-[1px]" />
       <Cloud className="cloud absolute right-[22%] top-20 hidden w-28 opacity-45 blur-[2px] md:block [animation-delay:-40s]" />
 
-      <div className="relative mx-auto max-w-4xl px-5 pt-20 text-center sm:px-8 sm:pt-24">
+      <SectionStage className="relative mx-auto max-w-4xl px-5 pt-20 text-center sm:px-8 sm:pt-24">
         <Reveal>
           <p className="eyebrow">The Last Page</p>
           <h2 className="mt-4 font-display text-3xl font-semibold leading-tight tracking-wide sm:text-5xl">
@@ -91,11 +95,11 @@ export default function Contact() {
             "Building quality into every release."
           </p>
         </Reveal>
-      </div>
+      </SectionStage>
 
       <div className="relative mt-16">
         {/* Dusk life over the last hills — fireflies, birds, pines */}
-        <Birds className="left-[16%] -top-10 h-10 w-28 opacity-70" />
+        <Birds className="float-bob left-[16%] -top-10 h-10 w-28 opacity-70" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-16 h-24">
           {[
             { l: "22%", t: "30%", d: "0s" },
@@ -111,8 +115,8 @@ export default function Contact() {
             />
           ))}
         </div>
-        <Pine className="absolute -top-12 left-[6%] z-10 hidden h-20 w-12 opacity-80 sm:block" />
-        <Pine className="absolute -top-20 left-[10%] z-10 hidden h-28 w-16 sm:block" />
+        <Pine className="sway absolute -top-12 left-[6%] z-10 hidden h-20 w-12 opacity-80 sm:block" />
+        <Pine className="sway absolute -top-20 left-[10%] z-10 hidden h-28 w-16 sm:block [animation-delay:-2.5s]" />
         <FooterHills />
         <footer className="bg-forest pb-6 pt-1 text-center dark:bg-[#1f3528]">
           <p className="font-mono text-[0.64rem] tracking-[0.18em] text-paper/90 dark:text-ink/80">

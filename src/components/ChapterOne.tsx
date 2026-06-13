@@ -11,6 +11,7 @@ import {
   Fig,
   GhostNumeral,
   Parallax,
+  SectionStage,
   Sprig,
   Tape,
   tilt,
@@ -212,9 +213,9 @@ export default function ChapterOne() {
       <Parallax speed={0.35} className="absolute -left-32 top-[30%]">
         <Contours className="relative h-[34rem] w-[34rem] opacity-50" />
       </Parallax>
-      <Sprig className="absolute bottom-24 left-3 hidden h-24 w-14 lg:block" />
+      <Sprig className="sway absolute bottom-24 left-3 hidden h-24 w-14 lg:block" />
 
-      <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+      <SectionStage className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
         <div className="grid items-start gap-8 lg:grid-cols-[1fr_14rem]">
           <SectionHeader
             eyebrow="Chapter One · Software Validation Engineer · Bangkok"
@@ -331,7 +332,7 @@ export default function ChapterOne() {
             ))}
           </div>
         </div>
-      </div>
+      </SectionStage>
     </section>
   );
 }

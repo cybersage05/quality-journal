@@ -3,7 +3,7 @@ import { useReducedMotion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Reveal, SectionHeader } from "./ui";
-import { Cloud, CompassRose, Contours, Pine } from "./decor";
+import { Cloud, CompassRose, Contours, Parallax, Pine } from "./decor";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -90,12 +90,16 @@ export default function Timeline() {
       aria-label="Career timeline"
       className="relative overflow-hidden bg-paper"
     >
-      <CompassRose className="right-[8%] top-20 hidden h-24 w-24 md:block" />
+      <Parallax speed={0.16} className="absolute right-[8%] top-20 hidden h-24 w-24 md:block">
+        <CompassRose className="relative h-full w-full" />
+      </Parallax>
       <Cloud className="cloud absolute left-[6%] top-12 w-32 opacity-60 blur-[1px]" />
       <Cloud className="cloud absolute right-[18%] top-32 hidden w-24 opacity-40 blur-[2px] md:block [animation-delay:-30s]" />
-      <Contours className="-left-32 bottom-10 h-[26rem] w-[26rem] opacity-45" />
-      <Pine className="absolute bottom-8 right-[12%] hidden h-24 w-14 opacity-50 lg:block" shade="var(--green)" />
-      <Pine className="absolute bottom-4 right-[8%] hidden h-32 w-20 opacity-70 lg:block" />
+      <Parallax speed={0.3} className="absolute -left-32 bottom-10">
+        <Contours className="relative h-[26rem] w-[26rem] opacity-45" />
+      </Parallax>
+      <Pine className="sway absolute bottom-8 right-[12%] hidden h-24 w-14 opacity-50 lg:block" shade="var(--green)" />
+      <Pine className="sway absolute bottom-4 right-[8%] hidden h-32 w-20 opacity-70 lg:block [animation-delay:-2s]" />
 
       <div className="relative mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-20">
         <SectionHeader eyebrow="The Trail Map" title="The Road So Far" align="center" />
