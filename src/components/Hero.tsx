@@ -297,19 +297,17 @@ export default function Hero({ theme, started }: { theme: Theme; started: boolea
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_110%_55%_at_55%_42%,transparent_38%,rgba(239,232,214,0.16)_100%)] dark:bg-[radial-gradient(ellipse_110%_55%_at_55%_42%,transparent_38%,rgba(20,40,56,0.22)_100%)]" />
         {/* sky depth — subtle top-edge veil */}
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-sky/12 to-transparent dark:from-[#142838]/30 dark:to-transparent" />
-        {/* Cinematic blue ambient light — replaces white paper patch */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 opacity-70 sm:opacity-100">
-          <motion.div
-            className="absolute bottom-6 left-1/2 h-64 w-[70%] -translate-x-1/2 sm:w-[50%]"
-            style={{
-              background:
-                "radial-gradient(ellipse 72% 62% at 50% 82%, rgba(59,130,246,0.08) 0%, rgba(96,165,250,0.04) 48%, transparent 72%)",
-              filter: "blur(72px)",
-            }}
-            animate={reduced ? undefined : { y: [0, -8, 0] }}
-            transition={{ duration: 13, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
-          />
-        </div>
+        {/* Cinematic blue ambient light — large diffuse glow, no visible edges */}
+        <motion.div
+          className="pointer-events-none absolute bottom-0 left-1/2 h-[65vh] w-full -translate-x-1/2 opacity-60 sm:opacity-100"
+          style={{
+            background:
+              "radial-gradient(ellipse 85% 38% at 50% 100%, rgba(96,165,250,0.05) 0%, rgba(59,130,246,0.02) 58%, transparent 80%)",
+            filter: "blur(90px)",
+          }}
+          animate={reduced ? undefined : { y: [0, -8, 0] }}
+          transition={{ duration: 13, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
+        />
 
         {/* river shimmer — light sliding along the water */}
         {!reduced && (
