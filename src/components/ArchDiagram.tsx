@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { KeyboardEvent, ReactNode } from "react";
-import { useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 /*
  * AT&T prepaid platform — accurate two-path bifurcating architecture.
@@ -84,14 +84,14 @@ const nodes: NodeDef[] = [
     sub: "recharge · top-up · plans",
     x: 350, y: 16, w: 200, h: 50,
     icon: I.user,
-    note: "Where everything begins — millions of AT&T prepaid subscribers recharging, topping up and managing plans across all three customer portals.",
+    note: "Millions of AT&T prepaid subscribers triggering transactions across all three customer portals.",
   },
   {
     id: "chg",
     name: "Charging System",
     x: 350, y: 112, w: 200, h: 50,
     icon: I.bolt,
-    note: "Rates and charges every subscriber event in real time. Any change here rippled across the entire platform — full regression scope on every release.",
+    note: "Rates every subscriber event in real time. Any change here triggered full-ecosystem regression.",
   },
   {
     id: "med",
@@ -100,7 +100,7 @@ const nodes: NodeDef[] = [
     x: 306, y: 212, w: 288, h: 68,
     tone: "hub",
     icon: I.funnel,
-    note: "The central router. Normalizes raw usage records from the Charging System and distributes clean event streams simultaneously into two independent downstream paths.",
+    note: "Central router — normalizes charging events and distributes clean streams into two independent paths simultaneously.",
   },
   // ── Path A: Operational ──────────────────────────────────────
   {
@@ -108,35 +108,35 @@ const nodes: NodeDef[] = [
     name: "Operational DB",
     x: 104, y: 338, w: 200, h: 50,
     icon: I.db,
-    note: "Stores live subscriber usage and account history at 10M+ record scale on MapR and Greenplum. My primary data-integrity validation foundation.",
+    note: "Live subscriber usage and account history at 10M+ record scale on MapR and Greenplum.",
   },
   {
     id: "api",
     name: "API Layer",
     x: 104, y: 442, w: 200, h: 50,
     icon: I.plug,
-    note: "Serves subscriber usage and history data to all three customer portals. Schema validation, contract testing and performance verification lived here.",
+    note: "Serves subscriber usage data to all three portals. Schema, contracts and performance validated here.",
   },
   {
     id: "self",
     name: "Self Care",
     x: 22, y: 556, w: 148, h: 46,
     icon: I.phone,
-    note: "Primary subscriber self-service portal. End-to-end usage-history validation culminated here — on the screens millions of AT&T prepaid customers used daily.",
+    note: "Primary self-service portal — end-to-end usage history validated on screens used by millions daily.",
   },
   {
     id: "kic",
     name: "Kic Care",
     x: 180, y: 556, w: 148, h: 46,
     icon: I.phone,
-    note: "Companion self-service application sharing the same APIs but with distinct user flows. Maintained an independent regression suite covering all Kic Care journeys.",
+    note: "Companion app sharing the same APIs with distinct flows — independent regression suite maintained.",
   },
   {
     id: "res",
     name: "Reseller Care",
     x: 338, y: 556, w: 148, h: 46,
     icon: I.phone,
-    note: "Retailer-facing portal for activations and account servicing. B2B flows validated in lockstep with all three consumer applications — complete ecosystem coverage.",
+    note: "Retailer-facing portal for activations and account servicing, validated alongside all consumer apps.",
   },
   // ── Path B: Reporting ────────────────────────────────────────
   {
@@ -145,14 +145,14 @@ const nodes: NodeDef[] = [
     sub: "report generation · usage analytics · business reporting",
     x: 596, y: 338, w: 200, h: 68,
     icon: I.warehouse,
-    note: "Aggregates platform usage data for analytics. Powers report generation, usage analytics and business reporting. Cross-environment record comparisons ran against this database throughout the 1.5-year AWS cloud migration.",
+    note: "Aggregates platform usage for analytics and reporting. Cross-environment comparisons ran here across the 1.5-year AWS migration.",
   },
   {
     id: "usage",
     name: "Usage History",
     x: 596, y: 442, w: 200, h: 50,
     icon: I.db,
-    note: "Aggregated subscriber usage records and account history. Validated record completeness and accuracy across both on-premise and AWS environments.",
+    note: "Aggregated subscriber records — completeness and accuracy verified across both on-prem and AWS environments.",
   },
   {
     id: "rpt",
@@ -160,7 +160,7 @@ const nodes: NodeDef[] = [
     x: 596, y: 556, w: 200, h: 50,
     tone: "gold",
     icon: I.chart,
-    note: "My primary validation domain — every usage, revenue and reconciliation report verified end to end, from data source to rendered output, pre- and post-AWS migration.",
+    note: "My primary domain — every revenue and reconciliation report verified end-to-end, pre and post-AWS migration.",
   },
 ];
 
@@ -184,6 +184,24 @@ const edges: EdgeDef[] = [
   { d: "M696 492 V556",                               branch: "b",    dur: 2.5, begin: 0.2 },
 ];
 
+/* ── Tooltip positions (SVG coords 0 0 900 625) ─────────────────────────────
+   Top nodes → right of center column (x 562+).
+   Mid/bottom nodes → neutral zone between the two paths (x 314+).
+   ─────────────────────────────────────────────────────────────────────────*/
+const TPOS: Record<string, { tx: number; ty: number; tw: number }> = {
+  sub:   { tx: 562, ty:  10, tw: 270 },
+  chg:   { tx: 562, ty: 108, tw: 270 },
+  med:   { tx: 606, ty: 214, tw: 268 },
+  opdb:  { tx: 316, ty: 330, tw: 268 },
+  api:   { tx: 316, ty: 434, tw: 268 },
+  self:  { tx: 316, ty: 448, tw: 268 },
+  kic:   { tx: 316, ty: 448, tw: 268 },
+  res:   { tx: 316, ty: 448, tw: 268 },
+  rptdb: { tx: 316, ty: 330, tw: 268 },
+  usage: { tx: 316, ty: 434, tw: 268 },
+  rpt:   { tx: 316, ty: 448, tw: 268 },
+};
+
 export default function ArchDiagram() {
   const [active, setActive] = useState<string>("med");
   const reduced = useReducedMotion();
@@ -197,7 +215,7 @@ export default function ArchDiagram() {
   };
 
   return (
-    <div role="group" aria-label="AT&T prepaid platform architecture diagram">
+    <div role="group" aria-label="AT&T prepaid platform architecture diagram" className="relative">
       <p className="sr-only">
         Subscriber transactions flow through the Charging System into the Mediation hub,
         which distributes data across two independent paths. Path A — operational: Operational
@@ -438,36 +456,37 @@ export default function ArchDiagram() {
         full validation scope · charging · mediation · databases · apis · reporting · portals · aws migration
       </p>
 
-      {/* Inspector panel */}
-      <div
-        aria-live="polite"
-        className="mx-auto mt-4 flex max-w-2xl items-start gap-3 rounded-xl border border-gold/40 bg-card px-4 py-3 shadow-[0_2px_10px_rgba(46,58,48,0.06)]"
-      >
-        <span
-          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gold/12 text-forest"
-          aria-hidden="true"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            {current.icon}
-          </svg>
-        </span>
-        <div>
-          <p className="font-display text-base font-semibold tracking-wide">
-            {current.name}
-          </p>
-          <p className="mt-0.5 text-[0.8rem] leading-[1.6] text-ink-soft">
-            {current.note}
-          </p>
-        </div>
-      </div>
+      {/* Floating tooltip — positioned near the active node */}
+      <AnimatePresence mode="wait">
+        {active && (() => {
+          const pos = TPOS[active];
+          return (
+            <motion.div
+              key={active}
+              aria-live="polite"
+              initial={reduced ? { opacity: 1 } : { opacity: 0, scale: 0.93, y: 4 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={reduced ? { opacity: 1 } : { opacity: 0, scale: 0.93 }}
+              transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+              className="pointer-events-none absolute"
+              style={{
+                left:  `${(pos.tx / 900) * 100}%`,
+                top:   `${(pos.ty / 625) * 100}%`,
+                width: `${(pos.tw / 900) * 100}%`,
+              }}
+            >
+              <div className="rounded-xl border border-gold/35 bg-card/80 px-3 py-2.5 shadow-[0_4px_18px_rgba(0,0,0,0.18)] backdrop-blur-md">
+                <p className="font-display text-[0.78rem] font-semibold leading-snug text-ink">
+                  {current.name}
+                </p>
+                <p className="mt-1 text-[0.68rem] leading-[1.5] text-ink-soft">
+                  {current.note}
+                </p>
+              </div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
     </div>
   );
 }
