@@ -297,12 +297,12 @@ export default function Hero({ theme, started }: { theme: Theme; started: boolea
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_110%_55%_at_55%_42%,transparent_38%,rgba(239,232,214,0.16)_100%)] dark:bg-[radial-gradient(ellipse_110%_55%_at_55%_42%,transparent_38%,rgba(20,40,56,0.22)_100%)]" />
         {/* sky depth — subtle top-edge veil */}
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-sky/12 to-transparent dark:from-[#142838]/30 dark:to-transparent" />
-        {/* paper rise from below — gentle fade into page */}
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-paper/30" />
+        {/* paper rise from below — fades to page in light mode, transparent in dark */}
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-paper/30 dark:to-transparent" />
 
-        {/* river shimmer — subtle water reflection */}
+        {/* river shimmer — light mode only; white on dark sky creates visible patch */}
         {!reduced && (
-          <div className="absolute bottom-[20%] left-[34%] h-20 w-44 -rotate-[18deg] overflow-hidden opacity-50">
+          <div className="absolute bottom-[20%] left-[34%] h-20 w-44 -rotate-[18deg] overflow-hidden opacity-50 dark:hidden">
             <div className="river-shimmer h-full w-1/2 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.30),transparent)] blur-[2px]" />
           </div>
         )}
