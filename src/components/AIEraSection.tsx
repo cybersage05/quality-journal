@@ -68,7 +68,7 @@ function TerminalStep({
       <motion.div
         className={`flex items-center gap-2 rounded-lg px-2.5 py-2 transition-colors duration-200 ${
           isAI
-            ? "hover:bg-gold/[0.07] hover:border-gold/20 border border-transparent"
+            ? "hover:bg-sky-400/[0.07] hover:border-sky-400/20 border border-transparent"
             : "hover:bg-white/[0.04] hover:border-white/10 border border-transparent"
         }`}
         initial={reduced ? { opacity: 1 } : { opacity: 0, x: isAI ? 10 : -10 }}
@@ -78,7 +78,7 @@ function TerminalStep({
         {/* Status LED */}
         <motion.span
           className={`h-[6px] w-[6px] shrink-0 rounded-full ${
-            isAI ? "bg-emerald-400" : "bg-slate-600"
+            isAI ? "bg-sky-400" : "bg-slate-600"
           }`}
           animate={
             isAI && !reduced
@@ -100,7 +100,7 @@ function TerminalStep({
         <div className="h-[5px] w-14 shrink-0 overflow-hidden rounded-full bg-white/[0.07]">
           <motion.div
             className={`h-full w-full rounded-full ${
-              isAI ? "bg-gold" : "bg-slate-700"
+              isAI ? "bg-sky-400" : "bg-slate-700"
             }`}
             style={{ transformOrigin: "left center" }}
             initial={{ scaleX: 0 }}
@@ -111,7 +111,7 @@ function TerminalStep({
       </motion.div>
 
       {!isLast && (
-        <div className={`ml-[18px] my-[2px] h-3 w-px ${isAI ? "bg-gold/20" : "bg-white/[0.07]"}`} />
+        <div className={`ml-[18px] my-[2px] h-3 w-px ${isAI ? "bg-sky-400/20" : "bg-white/[0.07]"}`} />
       )}
     </div>
   );
@@ -227,19 +227,36 @@ function AICard() {
   const onLeave = useCallback(() => { mx.set(0); my.set(0); }, [mx, my]);
 
   return (
-    /* Rotating conic-gradient border wrapper */
+    /* Gear ring wrapper */
     <div ref={wrapRef} className="relative" onPointerMove={onMove} onPointerLeave={onLeave}>
-      {/* Spinning gradient — GPU: only transform:rotate */}
+      {/* Highlight glow behind card */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-[-24px] -z-10 rounded-3xl"
+        style={{
+          background: "radial-gradient(ellipse at center, rgba(56,189,248,0.13) 0%, transparent 68%)",
+        }}
+      />
+
+      {/* Outer gear ring — slow clockwise, GPU: transform only */}
       {!reduced && (
         <motion.div
           aria-hidden="true"
-          className="absolute inset-[-1px] rounded-[17px] will-change-transform"
-          style={{
-            background:
-              "conic-gradient(from 0deg, transparent 0%, rgba(212,168,71,0.9) 18%, rgba(212,168,71,0.4) 28%, transparent 44%, rgba(26,120,80,0.25) 68%, transparent 84%)",
-          }}
+          className="absolute inset-[-3px] rounded-[19px] will-change-transform"
+          style={{ border: "2px dashed rgba(56,189,248,0.45)" }}
           animate={{ rotate: 360 }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 38, repeat: Infinity, ease: "linear" }}
+        />
+      )}
+
+      {/* Inner gear ring — slow counter-clockwise */}
+      {!reduced && (
+        <motion.div
+          aria-hidden="true"
+          className="absolute inset-[-6px] rounded-[22px] will-change-transform"
+          style={{ border: "1.5px dashed rgba(56,189,248,0.18)" }}
+          animate={{ rotate: -360 }}
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
         />
       )}
 
@@ -249,40 +266,40 @@ function AICard() {
         initial={reduced ? { opacity: 1 } : { opacity: 0, y: 28 }}
         animate={inView ? { opacity: 1, y: 0 } : undefined}
         transition={{ duration: 0.62, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
-        className="relative flex flex-col overflow-hidden rounded-2xl border border-gold/20 bg-[#060e08]"
+        className="relative flex flex-col overflow-hidden rounded-2xl border border-sky-400/20 bg-[#030a16]"
       >
         {/* Dot-grid ambient background */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 rounded-2xl opacity-25"
           style={{
-            backgroundImage: "radial-gradient(rgba(212,168,71,0.18) 1px, transparent 1px)",
+            backgroundImage: "radial-gradient(rgba(56,189,248,0.12) 1px, transparent 1px)",
             backgroundSize: "18px 18px",
           }}
         />
 
-        {/* Top gold haze */}
+        {/* Top blue haze */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-28 rounded-t-2xl"
-          style={{ background: "linear-gradient(to bottom, rgba(212,168,71,0.07), transparent)" }}
+          style={{ background: "linear-gradient(to bottom, rgba(56,189,248,0.07), transparent)" }}
         />
 
         <div className="relative flex flex-col p-5">
           {/* Terminal header */}
-          <div className="mb-4 flex items-center gap-1.5 border-b border-gold/[0.1] pb-3">
+          <div className="mb-4 flex items-center gap-1.5 border-b border-sky-400/[0.12] pb-3">
             <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]/40" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]/40" />
             <motion.span
-              className="h-2.5 w-2.5 rounded-full bg-emerald-400"
+              className="h-2.5 w-2.5 rounded-full bg-sky-400"
               animate={reduced ? {} : { opacity: [0.55, 1, 0.55] }}
               transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
             />
-            <span className="ml-2 flex-1 font-mono text-[0.56rem] uppercase tracking-[0.2em] text-gold/50">
+            <span className="ml-2 flex-1 font-mono text-[0.56rem] uppercase tracking-[0.2em] text-sky-400/50">
               ai-qa-core — active
             </span>
             <motion.span
-              className="rounded border border-gold/30 bg-gold/10 px-1.5 py-0.5 font-mono text-[0.5rem] text-gold"
+              className="rounded border border-sky-400/30 bg-sky-400/10 px-1.5 py-0.5 font-mono text-[0.5rem] text-sky-400"
               animate={reduced ? {} : { opacity: [0.7, 1, 0.7] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -292,13 +309,13 @@ function AICard() {
 
           {/* Title */}
           <div className="mb-4">
-            <p className="font-mono text-[0.55rem] uppercase tracking-[0.2em] text-gold/40">
+            <p className="font-mono text-[0.55rem] uppercase tracking-[0.2em] text-sky-400/50">
               02 / After
             </p>
             <h3 className="mt-1 font-display text-xl font-semibold text-slate-100">
               AI-Augmented QA
             </h3>
-            <p className="mt-0.5 font-mono text-[0.6rem] text-gold/40">
+            <p className="mt-0.5 font-mono text-[0.6rem] text-sky-400/40">
               Intelligent · Automated · Continuous
             </p>
           </div>
