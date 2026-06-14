@@ -10,299 +10,346 @@ import {
 } from "framer-motion";
 import { Reveal, SectionHeader, Pills } from "./ui";
 
-/* ─── Static data ──────────────────────────────────────────────── */
+/* ─── Data ─────────────────────────────────────────────────────── */
 
 const TRAD_STEPS = [
-  "Requirements Review",
-  "Manual Test Design",
-  "Script Development",
-  "Execution & Debugging",
-  "Maintenance",
+  { label: "Requirements Review",   time: "~4 hrs", pct: 42 },
+  { label: "Manual Test Design",    time: "~6 hrs", pct: 35 },
+  { label: "Script Development",    time: "~8 hrs", pct: 50 },
+  { label: "Execution & Debugging", time: "~5 hrs", pct: 38 },
+  { label: "Maintenance",           time: "~3 hrs", pct: 30 },
 ];
 
 const AI_STEPS = [
-  "Requirements Analysis",
-  "AI-Assisted Test Generation",
-  "Automation Development",
-  "Review & Refinement",
-  "Continuous Validation",
+  { label: "Requirements Analysis",       time: "~3 min", pct: 100 },
+  { label: "AI-Assisted Test Generation", time: "~5 min", pct: 100 },
+  { label: "Automation Development",      time: "~8 min", pct: 100 },
+  { label: "Review & Refinement",         time: "~2 min", pct: 100 },
+  { label: "Continuous Validation",       time: "auto",   pct: 100 },
 ];
 
 const METRICS = [
-  {
-    icon: "🎯",
-    label: "Better Coverage",
-    tooltip: "AI helps identify happy paths, edge cases, and negative scenarios.",
-  },
-  {
-    icon: "⚡",
-    label: "Faster Feedback",
-    tooltip: "Accelerates test creation and validation cycles.",
-  },
-  {
-    icon: "🔍",
-    label: "Smarter Analysis",
-    tooltip: "Transforms requirements into actionable insights.",
-  },
-  {
-    icon: "🧩",
-    label: "Reusable Automation",
-    tooltip: "Generates maintainable and scalable test assets.",
-  },
-  {
-    icon: "🚀",
-    label: "Higher Productivity",
-    tooltip: "Allows engineers to focus on quality and innovation.",
-  },
+  { icon: "🎯", label: "Better Coverage",      tooltip: "AI helps identify happy paths, edge cases, and negative scenarios." },
+  { icon: "⚡", label: "Faster Feedback",      tooltip: "Accelerates test creation and validation cycles." },
+  { icon: "🔍", label: "Smarter Analysis",     tooltip: "Transforms requirements into actionable insights." },
+  { icon: "🧩", label: "Reusable Automation",  tooltip: "Generates maintainable and scalable test assets." },
+  { icon: "🚀", label: "Higher Productivity",  tooltip: "Allows engineers to focus on quality and innovation." },
 ];
 
 const TECH_CHIPS = [
-  "Claude Code",
-  "ChatGPT",
-  "GitHub Copilot",
-  "Python",
-  "Robot Framework",
-  "Playwright",
-  "REST APIs",
-  "CI/CD",
+  "Claude Code", "ChatGPT", "GitHub Copilot", "Python",
+  "Robot Framework", "Playwright", "REST APIs", "CI/CD",
 ];
 
-/* Pre-defined particle positions — avoids recomputation on each render */
-const CARD_PARTICLES = [
-  { left: "8%", top: "16%", size: 2.5, dur: 4.1, delay: 0 },
-  { left: "26%", top: "63%", size: 2.0, dur: 6.3, delay: 1.4 },
-  { left: "54%", top: "27%", size: 3.5, dur: 5.0, delay: 2.6 },
-  { left: "74%", top: "73%", size: 2.0, dur: 7.1, delay: 0.8 },
-  { left: "88%", top: "43%", size: 2.5, dur: 4.8, delay: 2.0 },
-  { left: "40%", top: "86%", size: 2.0, dur: 5.9, delay: 3.3 },
+/* Floating chars for the transform beam */
+const BEAM_CHARS = [
+  { char: "01", top: "8%",  delay: 0.0 },
+  { char: "AI", top: "21%", delay: 0.8 },
+  { char: "fn", top: "34%", delay: 1.6 },
+  { char: "ML", top: "64%", delay: 0.4 },
+  { char: "if", top: "77%", delay: 1.2 },
+  { char: "∑λ", top: "90%", delay: 2.0 },
 ];
 
-/* ─── WorkflowStep ─────────────────────────────────────────────── */
+/* ─── TerminalStep ──────────────────────────────────────────────── */
 
-function WorkflowStep({
-  label,
-  index,
-  isLast,
-  isAI,
+function TerminalStep({
+  label, time, pct, index, isLast, isAI,
 }: {
-  label: string;
-  index: number;
-  isLast: boolean;
-  isAI: boolean;
+  label: string; time: string; pct: number;
+  index: number; isLast: boolean; isAI: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-30px" });
+  const inView = useInView(ref, { once: true, margin: "-20px" });
   const reduced = useReducedMotion();
 
   return (
     <div ref={ref}>
       <motion.div
-        className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 transition-colors duration-300 ${
+        className={`flex items-center gap-2 rounded-lg px-2.5 py-2 transition-colors duration-200 ${
           isAI
-            ? "border-gold/25 bg-gold/[0.07] hover:border-gold/45 hover:bg-gold/[0.12]"
-            : "border-line/60 bg-card/50 hover:border-line hover:bg-card"
+            ? "hover:bg-gold/[0.07] hover:border-gold/20 border border-transparent"
+            : "hover:bg-white/[0.04] hover:border-white/10 border border-transparent"
         }`}
-        initial={reduced ? { opacity: 1 } : { opacity: 0, x: isAI ? 14 : -14 }}
+        initial={reduced ? { opacity: 1 } : { opacity: 0, x: isAI ? 10 : -10 }}
         animate={inView ? { opacity: 1, x: 0 } : undefined}
-        transition={{ duration: 0.42, delay: index * 0.07, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.38, delay: index * 0.07, ease: [0.16, 1, 0.3, 1] }}
       >
-        <span
-          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full font-mono text-[0.58rem] font-bold ${
-            isAI ? "bg-gold/20 text-gold" : "bg-line/40 text-ink-soft"
+        {/* Status LED */}
+        <motion.span
+          className={`h-[6px] w-[6px] shrink-0 rounded-full ${
+            isAI ? "bg-emerald-400" : "bg-slate-600"
           }`}
-        >
-          {index + 1}
-        </span>
-        <span
-          className={`flex-1 text-[0.78rem] leading-snug ${
-            isAI ? "text-ink" : "text-ink-soft/80"
-          }`}
-        >
+          animate={
+            isAI && !reduced
+              ? { opacity: [0.35, 1, 0.35], scale: [0.8, 1.3, 0.8] }
+              : {}
+          }
+          transition={{ duration: 2.2, repeat: Infinity, delay: index * 0.28, ease: "easeInOut" }}
+        />
+
+        {/* Label */}
+        <span className={`flex-1 font-mono text-[0.7rem] leading-none ${
+          isAI ? "text-slate-200" : "text-slate-500"
+        }`}>
+          {!isAI && <span className="mr-1 text-slate-700">$</span>}
           {label}
         </span>
-        {isAI && (
-          <motion.span
-            className="h-2 w-2 shrink-0 rounded-full bg-gold/70"
-            animate={
-              reduced
-                ? {}
-                : { opacity: [0.3, 1, 0.3], scale: [0.8, 1.25, 0.8] }
-            }
-            transition={{
-              duration: 2.1,
-              repeat: Infinity,
-              delay: index * 0.28,
-              ease: "easeInOut",
-            }}
+
+        {/* Time badge */}
+        <span className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[0.52rem] tracking-wide ${
+          isAI
+            ? "border border-gold/25 bg-gold/10 text-gold"
+            : "border border-white/[0.07] bg-white/[0.04] text-slate-600"
+        }`}>
+          {time}
+        </span>
+
+        {/* Progress bar */}
+        <div className="h-[5px] w-14 shrink-0 overflow-hidden rounded-full bg-white/[0.07]">
+          <motion.div
+            className={`h-full w-full rounded-full ${
+              isAI ? "bg-gold" : "bg-slate-700"
+            }`}
+            style={{ transformOrigin: "left center" }}
+            initial={{ scaleX: 0 }}
+            animate={inView ? { scaleX: pct / 100 } : undefined}
+            transition={{ duration: 0.75, delay: index * 0.1 + 0.4, ease: [0.16, 1, 0.3, 1] }}
           />
-        )}
+        </div>
       </motion.div>
+
       {!isLast && (
-        <div
-          className={`mx-auto my-[3px] h-3 w-px ${
-            isAI ? "bg-gold/35" : "bg-line/45"
-          }`}
-        />
+        <div className={`ml-[18px] my-[2px] h-3 w-px ${isAI ? "bg-gold/20" : "bg-white/[0.07]"}`} />
       )}
     </div>
   );
 }
 
-/* ─── ComparisonCard ───────────────────────────────────────────── */
+/* ─── LegacyCard ────────────────────────────────────────────────── */
 
-function ComparisonCard({
-  isAI,
-  steps,
-  footerBadge,
-}: {
-  isAI: boolean;
-  steps: string[];
-  footerBadge: string;
-}) {
+function LegacyCard() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-50px" });
   const reduced = useReducedMotion();
-
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [6, -6]), {
-    stiffness: 380,
-    damping: 38,
-  });
-  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-6, 6]), {
-    stiffness: 380,
-    damping: 38,
-  });
+  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [5, -5]), { stiffness: 380, damping: 40 });
+  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-5, 5]), { stiffness: 380, damping: 40 });
 
-  const handleMove = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      if (reduced) return;
-      const rect = ref.current?.getBoundingClientRect();
-      if (!rect) return;
-      mx.set((e.clientX - rect.left) / rect.width - 0.5);
-      my.set((e.clientY - rect.top) / rect.height - 0.5);
-    },
-    [reduced, mx, my]
-  );
+  const onMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (reduced) return;
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    mx.set((e.clientX - r.left) / r.width - 0.5);
+    my.set((e.clientY - r.top) / r.height - 0.5);
+  }, [reduced, mx, my]);
 
-  const handleLeave = useCallback(() => {
-    mx.set(0);
-    my.set(0);
-  }, [mx, my]);
+  const onLeave = useCallback(() => { mx.set(0); my.set(0); }, [mx, my]);
 
   return (
     <motion.div
       ref={ref}
       style={reduced ? {} : { rotateX, rotateY, transformPerspective: 1200 }}
-      onPointerMove={handleMove}
-      onPointerLeave={handleLeave}
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
       initial={reduced ? { opacity: 1 } : { opacity: 0, y: 28 }}
       animate={inView ? { opacity: 1, y: 0 } : undefined}
-      transition={{
-        duration: 0.65,
-        delay: isAI ? 0.18 : 0,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-      className={`relative flex flex-col overflow-hidden rounded-2xl border p-5 backdrop-blur-sm transition-shadow duration-500 ${
-        isAI
-          ? "border-gold/30 bg-[radial-gradient(ellipse_at_top_right,rgba(212,168,71,0.09)_0%,transparent_60%)] hover:shadow-[0_20px_60px_rgba(212,168,71,0.13)]"
-          : "border-line/60 bg-card/70 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)]"
-      }`}
+      transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+      className="relative flex flex-col overflow-hidden rounded-2xl border border-white/[0.07] bg-[#0b1120]"
     >
-      {/* Background floating particles — plain motion.span, no hooks in loop */}
-      {!reduced &&
-        CARD_PARTICLES.map((p, i) => (
-          <motion.span
-            key={i}
-            className={`pointer-events-none absolute rounded-full ${
-              isAI ? "bg-gold" : "bg-ink"
-            }`}
-            style={{ left: p.left, top: p.top, width: p.size, height: p.size }}
-            animate={{
-              opacity: [0, isAI ? 0.32 : 0.1, 0],
-              y: [0, -22, 0],
-            }}
-            transition={{
-              duration: p.dur,
-              delay: p.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-
-      {/* Card header */}
-      <div className="mb-5 flex items-start justify-between gap-3">
-        <div>
-          <span
-            className={`mb-1.5 block font-mono text-[0.57rem] uppercase tracking-[0.22em] ${
-              isAI ? "text-gold" : "text-ink-soft/55"
-            }`}
-          >
-            {isAI ? "AI-Augmented" : "Traditional"}
-          </span>
-          <h3
-            className={`font-display text-xl font-semibold leading-tight ${
-              isAI ? "text-ink" : "text-ink-soft"
-            }`}
-          >
-            {isAI ? "AI-Augmented QA" : "Traditional QA"}
-          </h3>
-        </div>
-        <span
-          className={`shrink-0 rounded-full border px-2.5 py-1 font-mono text-[0.57rem] uppercase tracking-wider ${
-            isAI
-              ? "border-gold/30 bg-gold/15 text-gold"
-              : "border-line/50 bg-line/20 text-ink-soft"
-          }`}
-        >
-          {isAI ? "Modern" : "Legacy"}
-        </span>
-      </div>
-
-      {/* Workflow steps */}
-      <div className="flex-1">
-        {steps.map((step, i) => (
-          <WorkflowStep
-            key={step}
-            label={step}
-            index={i}
-            isLast={i === steps.length - 1}
-            isAI={isAI}
-          />
-        ))}
-      </div>
-
-      {/* Footer badge */}
+      {/* Scanline CRT overlay */}
       <div
-        className={`mt-5 rounded-lg border px-3 py-2.5 text-center font-mono text-[0.63rem] font-medium tracking-wide ${
-          isAI
-            ? "border-gold/25 bg-gradient-to-r from-gold/15 to-forest/15 text-gold"
-            : "border-line/40 bg-line/15 text-ink-soft"
-        }`}
-      >
-        {footerBadge}
-      </div>
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-10 rounded-2xl opacity-50"
+        style={{
+          background:
+            "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.016) 3px, rgba(255,255,255,0.016) 4px)",
+        }}
+      />
 
-      {/* Breathing glow overlay — AI card only */}
-      {isAI && (
-        <motion.div
-          className="pointer-events-none absolute inset-0 rounded-2xl"
-          style={{
-            background:
-              "radial-gradient(ellipse at 65% 0%, rgba(212,168,71,0.13) 0%, transparent 55%)",
-          }}
-          animate={reduced ? {} : { opacity: [0.4, 0.9, 0.4] }}
-          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-        />
-      )}
+      <div className="relative z-20 flex flex-col p-5">
+        {/* Terminal header bar */}
+        <div className="mb-4 flex items-center gap-1.5 border-b border-white/[0.07] pb-3">
+          <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#28ca41]/30" />
+          <span className="ml-2 flex-1 font-mono text-[0.56rem] uppercase tracking-[0.2em] text-slate-600">
+            legacy-qa-v1.0.0
+          </span>
+          <span className="rounded border border-red-500/20 bg-red-500/[0.08] px-1.5 py-0.5 font-mono text-[0.5rem] text-red-500/70">
+            MANUAL
+          </span>
+        </div>
+
+        {/* Title */}
+        <div className="mb-4">
+          <p className="font-mono text-[0.55rem] uppercase tracking-[0.2em] text-slate-600">
+            01 / Before
+          </p>
+          <h3 className="mt-1 font-display text-xl font-semibold text-slate-400">
+            Traditional QA
+          </h3>
+          <p className="mt-0.5 font-mono text-[0.6rem] text-slate-700">
+            Sequential · Human-driven · Bottlenecked
+          </p>
+        </div>
+
+        {/* Steps */}
+        <div className="flex-1">
+          {TRAD_STEPS.map((step, i) => (
+            <TerminalStep
+              key={step.label}
+              {...step}
+              index={i}
+              isLast={i === TRAD_STEPS.length - 1}
+              isAI={false}
+            />
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="mt-4 flex items-center justify-between rounded-lg border border-red-500/15 bg-red-500/[0.05] px-3 py-2">
+          <span className="font-mono text-[0.56rem] text-red-400/60">⚠ OVERHEAD DETECTED</span>
+          <span className="font-mono text-[0.56rem] text-slate-700">Time-intensive</span>
+        </div>
+      </div>
     </motion.div>
   );
 }
 
-/* ─── FlowArrow ────────────────────────────────────────────────── */
+/* ─── AICard ────────────────────────────────────────────────────── */
 
-function FlowArrow() {
+function AICard() {
+  const ref = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+  const reduced = useReducedMotion();
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [5, -5]), { stiffness: 380, damping: 40 });
+  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-5, 5]), { stiffness: 380, damping: 40 });
+
+  const onMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (reduced) return;
+    const r = wrapRef.current?.getBoundingClientRect();
+    if (!r) return;
+    mx.set((e.clientX - r.left) / r.width - 0.5);
+    my.set((e.clientY - r.top) / r.height - 0.5);
+  }, [reduced, mx, my]);
+
+  const onLeave = useCallback(() => { mx.set(0); my.set(0); }, [mx, my]);
+
+  return (
+    /* Rotating conic-gradient border wrapper */
+    <div ref={wrapRef} className="relative" onPointerMove={onMove} onPointerLeave={onLeave}>
+      {/* Spinning gradient — GPU: only transform:rotate */}
+      {!reduced && (
+        <motion.div
+          aria-hidden="true"
+          className="absolute inset-[-1px] rounded-[17px] will-change-transform"
+          style={{
+            background:
+              "conic-gradient(from 0deg, transparent 0%, rgba(212,168,71,0.9) 18%, rgba(212,168,71,0.4) 28%, transparent 44%, rgba(26,120,80,0.25) 68%, transparent 84%)",
+          }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 5.5, repeat: Infinity, ease: "linear" }}
+        />
+      )}
+
+      <motion.div
+        ref={ref}
+        style={reduced ? {} : { rotateX, rotateY, transformPerspective: 1200 }}
+        initial={reduced ? { opacity: 1 } : { opacity: 0, y: 28 }}
+        animate={inView ? { opacity: 1, y: 0 } : undefined}
+        transition={{ duration: 0.62, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+        className="relative flex flex-col overflow-hidden rounded-2xl border border-gold/20 bg-[#060e08]"
+      >
+        {/* Dot-grid ambient background */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-2xl opacity-25"
+          style={{
+            backgroundImage: "radial-gradient(rgba(212,168,71,0.18) 1px, transparent 1px)",
+            backgroundSize: "18px 18px",
+          }}
+        />
+
+        {/* Top gold haze */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-28 rounded-t-2xl"
+          style={{ background: "linear-gradient(to bottom, rgba(212,168,71,0.07), transparent)" }}
+        />
+
+        <div className="relative flex flex-col p-5">
+          {/* Terminal header */}
+          <div className="mb-4 flex items-center gap-1.5 border-b border-gold/[0.1] pb-3">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]/40" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]/40" />
+            <motion.span
+              className="h-2.5 w-2.5 rounded-full bg-emerald-400"
+              animate={reduced ? {} : { opacity: [0.55, 1, 0.55] }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <span className="ml-2 flex-1 font-mono text-[0.56rem] uppercase tracking-[0.2em] text-gold/50">
+              ai-qa-core — active
+            </span>
+            <motion.span
+              className="rounded border border-gold/30 bg-gold/10 px-1.5 py-0.5 font-mono text-[0.5rem] text-gold"
+              animate={reduced ? {} : { opacity: [0.7, 1, 0.7] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              AI LIVE
+            </motion.span>
+          </div>
+
+          {/* Title */}
+          <div className="mb-4">
+            <p className="font-mono text-[0.55rem] uppercase tracking-[0.2em] text-gold/40">
+              02 / After
+            </p>
+            <h3 className="mt-1 font-display text-xl font-semibold text-slate-100">
+              AI-Augmented QA
+            </h3>
+            <p className="mt-0.5 font-mono text-[0.6rem] text-gold/40">
+              Intelligent · Automated · Continuous
+            </p>
+          </div>
+
+          {/* Steps */}
+          <div className="flex-1">
+            {AI_STEPS.map((step, i) => (
+              <TerminalStep
+                key={step.label}
+                {...step}
+                index={i}
+                isLast={i === AI_STEPS.length - 1}
+                isAI={true}
+              />
+            ))}
+          </div>
+
+          {/* Footer */}
+          <div className="mt-4 flex items-center justify-between rounded-lg border border-gold/20 bg-gold/[0.05] px-3 py-2">
+            <motion.span
+              className="font-mono text-[0.56rem] text-gold"
+              animate={reduced ? {} : { opacity: [0.65, 1, 0.65] }}
+              transition={{ duration: 2.5, repeat: Infinity }}
+            >
+              ✓ ALL SYSTEMS OPTIMAL
+            </motion.span>
+            <span className="font-mono text-[0.56rem] text-gold/50">Faster · Smarter · Higher Coverage</span>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+/* ─── TransformBeam ─────────────────────────────────────────────── */
+
+function TransformBeam() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const reduced = useReducedMotion();
@@ -310,125 +357,111 @@ function FlowArrow() {
   return (
     <div
       ref={ref}
-      className="hidden lg:flex items-center justify-center"
+      className="hidden lg:flex relative flex-col items-center justify-center"
       aria-hidden="true"
     >
-      <svg viewBox="0 0 64 120" className="h-52 w-16" fill="none" overflow="visible">
-        <defs>
-          <linearGradient id="arrowLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="var(--gold)" stopOpacity="0.08" />
-            <stop offset="55%" stopColor="var(--gold)" stopOpacity="0.85" />
-            <stop offset="100%" stopColor="var(--gold)" stopOpacity="1" />
-          </linearGradient>
-          <filter id="arrowGlow" x="-80%" y="-80%" width="260%" height="260%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
+      {/* Vertical glow spine */}
+      <motion.div
+        className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2"
+        style={{
+          background:
+            "linear-gradient(to bottom, transparent 0%, rgba(212,168,71,0.3) 25%, rgba(212,168,71,0.65) 50%, rgba(212,168,71,0.3) 75%, transparent 100%)",
+        }}
+        initial={reduced ? {} : { opacity: 0 }}
+        animate={inView ? { opacity: 1 } : undefined}
+        transition={{ duration: 0.8 }}
+      />
 
-        {/* Dashed track */}
-        <path
-          d="M8,60 L56,60"
-          stroke="var(--gold)"
-          strokeOpacity="0.12"
-          strokeWidth="1.5"
-          strokeDasharray="4 3"
-        />
+      {/* Floating code chars */}
+      {!reduced &&
+        BEAM_CHARS.map(({ char, top, delay }, i) => (
+          <motion.span
+            key={i}
+            className="pointer-events-none absolute left-1/2 -translate-x-1/2 select-none font-mono text-[0.46rem] text-gold/40"
+            style={{ top }}
+            animate={{ opacity: [0, 0.75, 0], y: [0, -8, -18] }}
+            transition={{ duration: 3.8, delay, repeat: Infinity, ease: "easeOut" }}
+          >
+            {char}
+          </motion.span>
+        ))}
 
-        {/* Animated main line */}
-        <motion.path
-          d="M8,60 L52,60"
-          stroke="url(#arrowLineGrad)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          initial={reduced ? {} : { pathLength: 0, opacity: 0 }}
-          animate={inView ? { pathLength: 1, opacity: 1 } : undefined}
-          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-        />
+      {/* Center diamond badge */}
+      <div className="relative z-10 flex flex-col items-center gap-2">
+        {/* Expanding pulse rings */}
+        {!reduced && (
+          <>
+            <motion.div
+              className="absolute h-14 w-14 rounded-full border border-gold/25"
+              animate={{ scale: [1, 1.9, 1], opacity: [0.55, 0, 0.55] }}
+              transition={{ duration: 3.0, repeat: Infinity, ease: "easeOut" }}
+            />
+            <motion.div
+              className="absolute h-14 w-14 rounded-full border border-gold/15"
+              animate={{ scale: [1, 2.6, 1], opacity: [0.3, 0, 0.3] }}
+              transition={{ duration: 3.0, repeat: Infinity, ease: "easeOut", delay: 0.6 }}
+            />
+          </>
+        )}
 
-        {/* Arrowhead */}
-        <motion.path
-          d="M46,53 L56,60 L46,67"
-          stroke="var(--gold)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        {/* Rotated diamond */}
+        <motion.div
+          className="relative flex h-12 w-12 rotate-45 items-center justify-center rounded-xl border border-gold/50 bg-[#060e08] shadow-[0_0_28px_rgba(212,168,71,0.28)]"
+          initial={reduced ? {} : { scale: 0, opacity: 0 }}
+          animate={inView ? { scale: 1, opacity: 1 } : undefined}
+          transition={{ duration: 0.5, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span className="-rotate-45 text-lg leading-none">⚡</span>
+        </motion.div>
+
+        {/* Label */}
+        <motion.span
+          className="mt-1.5 font-mono text-[0.48rem] uppercase tracking-[0.22em] text-gold/45"
+          initial={reduced ? {} : { opacity: 0 }}
+          animate={inView ? { opacity: 1 } : undefined}
+          transition={{ delay: 0.85 }}
+        >
+          TRANSFORM
+        </motion.span>
+      </div>
+
+      {/* Horizontal flowing particles */}
+      {!reduced && (
+        <svg
+          className="absolute top-1/2 left-0 w-full -translate-y-1/2 overflow-visible"
+          viewBox="0 0 80 10"
           fill="none"
-          initial={reduced ? {} : { opacity: 0, scale: 0.4 }}
-          animate={inView ? { opacity: 1, scale: 1 } : undefined}
-          style={{ transformOrigin: "51px 60px" }}
-          transition={{ duration: 0.35, delay: 0.82, ease: [0.16, 1, 0.3, 1] }}
-        />
-
-        {/* Flowing particles */}
-        {!reduced &&
-          [
-            { delay: 0.5, r: 2.5, op: 0.9 },
-            { delay: 1.1, r: 1.8, op: 0.6 },
-            { delay: 1.7, r: 2.0, op: 0.75 },
+        >
+          {[
+            { delay: 0.3, r: 2.5, op: 0.9 },
+            { delay: 1.0, r: 1.8, op: 0.6 },
+            { delay: 1.7, r: 2.1, op: 0.75 },
           ].map(({ delay, r, op }, i) => (
             <motion.circle
               key={i}
-              cy="60"
+              cy="5"
               r={r}
               fill="var(--gold)"
               animate={
                 inView
-                  ? { cx: [8, 56], opacity: [0, op, op, 0] }
-                  : { cx: [8], opacity: [0] }
+                  ? { cx: [-4, 84], opacity: [0, op, op, 0] }
+                  : { cx: [-4], opacity: [0] }
               }
               transition={{ duration: 1.55, delay, repeat: Infinity, ease: "linear" }}
             />
           ))}
-
-        {/* Pulsing glow at tip */}
-        {!reduced && (
-          <motion.circle
-            cx="56"
-            cy="60"
-            r="9"
-            fill="var(--gold)"
-            filter="url(#arrowGlow)"
-            animate={
-              inView
-                ? { opacity: [0, 0.32, 0], scale: [0.6, 2.2, 0.6] }
-                : { opacity: 0 }
-            }
-            style={{ transformOrigin: "56px 60px" }}
-            transition={{ duration: 2.3, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
-          />
-        )}
-
-        {/* Label */}
-        <text
-          x="32"
-          y="86"
-          textAnchor="middle"
-          fill="var(--gold)"
-          fillOpacity="0.45"
-          fontFamily="var(--font-mono)"
-          fontSize="5.5"
-          letterSpacing="2"
-        >
-          EVOLUTION
-        </text>
-      </svg>
+        </svg>
+      )}
     </div>
   );
 }
 
-/* ─── ImpactMetric ─────────────────────────────────────────────── */
+/* ─── ImpactMetric ──────────────────────────────────────────────── */
 
 function ImpactMetric({
-  icon,
-  label,
-  tooltip,
-  index,
+  icon, label, tooltip, index,
 }: {
-  icon: string;
-  label: string;
-  tooltip: string;
-  index: number;
+  icon: string; label: string; tooltip: string; index: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-30px" });
@@ -453,9 +486,7 @@ function ImpactMetric({
     >
       <motion.div
         className={`flex flex-col items-center gap-2 rounded-xl border px-3 py-4 text-center backdrop-blur-sm transition-colors duration-300 ${
-          hovered
-            ? "border-gold/50 bg-gold/[0.09]"
-            : "border-line/50 bg-card/60"
+          hovered ? "border-gold/50 bg-gold/[0.09]" : "border-line/50 bg-card/60"
         }`}
         animate={reduced ? {} : { scale: hovered ? 1.04 : 1 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
@@ -464,7 +495,7 @@ function ImpactMetric({
           {icon}
         </span>
         <span
-          className={`font-mono text-[0.59rem] font-semibold uppercase tracking-[0.15em] transition-colors duration-200 ${
+          className={`font-mono text-[0.59rem] font-semibold uppercase tracking-[0.14em] transition-colors duration-200 ${
             hovered ? "text-gold" : "text-ink-soft"
           }`}
         >
@@ -472,8 +503,8 @@ function ImpactMetric({
         </span>
         {!reduced && (
           <motion.span
-            className="h-1 w-1 rounded-full bg-gold"
-            animate={{ opacity: hovered ? 1 : 0.25, scale: hovered ? 2.0 : 1 }}
+            className="h-[3px] w-[3px] rounded-full bg-gold"
+            animate={{ opacity: hovered ? 1 : 0.25, scale: hovered ? 2.2 : 1 }}
             transition={{ duration: 0.2 }}
           />
         )}
@@ -488,10 +519,7 @@ function ImpactMetric({
             exit={{ opacity: 0, y: 5, scale: 0.95 }}
             transition={{ duration: 0.17, ease: "easeOut" }}
           >
-            <p className="text-[0.72rem] leading-[1.55] text-ink-soft">
-              {tooltip}
-            </p>
-            {/* Caret */}
+            <p className="text-[0.72rem] leading-[1.55] text-ink-soft">{tooltip}</p>
             <span
               className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent"
               style={{ borderTopColor: "rgba(212,168,71,0.22)" }}
@@ -503,70 +531,66 @@ function ImpactMetric({
   );
 }
 
-/* ─── Main export ──────────────────────────────────────────────── */
+/* ─── Main export ───────────────────────────────────────────────── */
 
 export default function AIEraSection() {
   return (
     <section className="relative overflow-hidden py-20 sm:py-28">
-      {/* Ambient background gradient */}
+      {/* Ambient section glow */}
       <div
+        aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 80% 55% at 50% -5%, rgba(212,168,71,0.055) 0%, transparent 70%)",
+            "radial-gradient(ellipse 70% 50% at 50% -10%, rgba(212,168,71,0.06) 0%, transparent 70%)",
         }}
-        aria-hidden="true"
       />
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
-        {/* Section header */}
+        {/* Header */}
         <SectionHeader
-          eyebrow="Quality Engineering"
-          title="Quality Engineering in the AI Era"
+          eyebrow="Next-Gen Engineering"
+          title="AI Based QA"
           align="center"
         />
         <Reveal delay={0.12}>
-          <p className="mx-auto mt-3 max-w-2xl text-center text-[0.85rem] italic leading-[1.7] text-ink-soft">
+          <p className="mx-auto mt-3 max-w-xl text-center text-[0.85rem] italic leading-[1.7] text-ink-soft">
             "How AI is transforming software quality while keeping engineers at the center."
           </p>
         </Reveal>
 
-        {/* Before vs After comparison */}
-        <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-[1fr_5rem_1fr] lg:items-stretch">
-          <ComparisonCard
-            isAI={false}
-            steps={TRAD_STEPS}
-            footerBadge="Time-intensive"
-          />
-          <FlowArrow />
-          <ComparisonCard
-            isAI={true}
-            steps={AI_STEPS}
-            footerBadge="Faster · Smarter · Higher Coverage"
-          />
+        {/* Comparison grid */}
+        <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-[1fr_6rem_1fr] lg:items-stretch">
+          <LegacyCard />
+          <TransformBeam />
+          <AICard />
         </div>
 
         {/* Impact metrics */}
         <div className="mt-14">
           <Reveal>
-            <p className="mb-5 text-center font-mono text-[0.59rem] uppercase tracking-[0.22em] text-ink-soft/55">
+            <p className="mb-5 text-center font-mono text-[0.58rem] uppercase tracking-[0.22em] text-ink-soft/55">
               Impact Metrics — Hover to Explore
             </p>
           </Reveal>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {METRICS.map((m, i) => (
-              <ImpactMetric key={m.label} icon={m.icon} label={m.label} tooltip={m.tooltip} index={i} />
+              <ImpactMetric
+                key={m.label}
+                icon={m.icon}
+                label={m.label}
+                tooltip={m.tooltip}
+                index={i}
+              />
             ))}
           </div>
         </div>
 
-        {/* Engineering philosophy card */}
+        {/* Philosophy card */}
         <Reveal className="mt-12" delay={0.1}>
           <div className="relative overflow-hidden rounded-2xl border border-gold/25 bg-[radial-gradient(ellipse_at_center,rgba(212,168,71,0.06)_0%,transparent_70%)] p-8 backdrop-blur-sm sm:p-10">
-            {/* Corner accents */}
             <span className="pointer-events-none absolute left-0 top-0 h-12 w-12 rounded-tl-2xl border-l-2 border-t-2 border-gold/25" />
             <span className="pointer-events-none absolute bottom-0 right-0 h-12 w-12 rounded-br-2xl border-b-2 border-r-2 border-gold/25" />
-
             <blockquote className="text-center">
               <p className="mx-auto max-w-3xl font-display text-[1.05rem] italic leading-[1.75] text-ink sm:text-[1.15rem]">
                 "AI does not replace quality engineers—it amplifies expertise,
@@ -574,7 +598,6 @@ export default function AIEraSection() {
                 software faster."
               </p>
             </blockquote>
-
             <div className="mt-7 flex justify-center">
               <Pills items={TECH_CHIPS} label="AI & Testing Technologies" />
             </div>
