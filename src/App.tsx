@@ -13,7 +13,7 @@ import Skills from "./components/Skills";
 import Contact from "./components/Contact";
 import { useTheme } from "./hooks/useTheme";
 import { PointerProvider } from "./hooks/usePointer";
-import { JournalRail } from "./components/decor";
+import { JournalRail, LightningStreaks } from "./components/decor";
 import ScrollJourney from "./components/ScrollJourney";
 
 export default function App() {
@@ -25,6 +25,7 @@ export default function App() {
       <div className="grain">
         <Loader onDone={() => setStarted(true)} />
         <CursorGlow />
+        <LightningStreaks />
         <Nav theme={theme} onToggleTheme={toggleTheme} />
         <JournalRail />
         <ScrollJourney />

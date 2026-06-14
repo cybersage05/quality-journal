@@ -564,6 +564,65 @@ export function tilt(deg: number): CSSProperties {
   return { transform: `rotate(${deg}deg)` };
 }
 
+/* ── Lightning / energy-streak data ── */
+const STREAKS = [
+  // left edge
+  { id: "l1", side: "left",  top: "12vh", h: 72, rot:  14, w: 1, color: "#3B82F6", base: 0.05, blur: 3, delay: 0,   dur: 8.5 },
+  { id: "l2", side: "left",  top: "27vh", h: 55, rot:  -9, w: 2, color: "#60A5FA", base: 0.04, blur: 2, delay: 3.2, dur: 11  },
+  { id: "l3", side: "left",  top: "44vh", h: 88, rot:  18, w: 1, color: "#3B82F6", base: 0.06, blur: 4, delay: 1.1, dur: 9.5 },
+  { id: "l4", side: "left",  top: "61vh", h: 62, rot: -14, w: 2, color: "#60A5FA", base: 0.03, blur: 3, delay: 5.4, dur: 13  },
+  { id: "l5", side: "left",  top: "79vh", h: 48, rot:  22, w: 1, color: "#3B82F6", base: 0.04, blur: 2, delay: 2.7, dur: 7.5 },
+  // right edge
+  { id: "r1", side: "right", top: "19vh", h: 66, rot: -13, w: 1, color: "#60A5FA", base: 0.05, blur: 3, delay: 4.1, dur: 10  },
+  { id: "r2", side: "right", top: "36vh", h: 80, rot:   7, w: 2, color: "#3B82F6", base: 0.04, blur: 4, delay: 1.8, dur: 12.5},
+  { id: "r3", side: "right", top: "54vh", h: 52, rot: -20, w: 1, color: "#60A5FA", base: 0.06, blur: 2, delay: 6.3, dur: 8   },
+  { id: "r4", side: "right", top: "72vh", h: 74, rot:  16, w: 2, color: "#3B82F6", base: 0.03, blur: 3, delay: 0.9, dur: 14  },
+  { id: "r5", side: "right", top: "88vh", h: 58, rot:  -8, w: 1, color: "#60A5FA", base: 0.05, blur: 2, delay: 3.6, dur: 9   },
+  // corner accents
+  { id: "c1", side: "left",  top: "2vh",  h: 100,rot:  30, w: 1, color: "#3B82F6", base: 0.04, blur: 4, delay: 2.2, dur: 11.5},
+  { id: "c2", side: "right", top: "2vh",  h: 90, rot: -30, w: 1, color: "#60A5FA", base: 0.03, blur: 3, delay: 7.1, dur: 10  },
+] as const;
+
+/** Faint blue energy streaks along page edges — depth and atmosphere. */
+export function LightningStreaks() {
+  const reduced = useReducedMotion();
+  if (reduced) return null;
+
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 z-[1] overflow-hidden"
+    >
+      {STREAKS.map((s) => (
+        <motion.div
+          key={s.id}
+          style={{
+            position: "absolute",
+            ...(s.side === "left" ? { left: -2 } : { right: -2 }),
+            top: s.top,
+            width: s.w,
+            height: s.h,
+            background: `linear-gradient(to bottom, transparent, ${s.color}, transparent)`,
+            filter: `blur(${s.blur}px)`,
+            transformOrigin: s.side === "left" ? "top left" : "top right",
+            rotate: s.rot,
+          }}
+          animate={{
+            opacity: [s.base * 0.5, s.base, s.base * 0.6, Math.min(s.base * 1.15, 0.06), s.base * 0.4, s.base],
+            y: [0, 2, -3, 1, -2, 0],
+          }}
+          transition={{
+            duration: s.dur,
+            delay: s.delay,
+            ease: "easeInOut",
+            repeat: Infinity,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /**
  * Fixed journal-margin rail on very wide screens — a miniature "my journey"
  * trail stitched into the page binding. Pure ornament; the real timeline
