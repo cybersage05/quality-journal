@@ -6,6 +6,7 @@ import Hero from "./components/Hero";
 import ChapterOne from "./components/ChapterOne";
 import ChapterTwo from "./components/ChapterTwo";
 import ChapterThree from "./components/ChapterThree";
+import AIEraSection from "./components/AIEraSection";
 import IronProjects from "./components/IronProjects";
 import Timeline from "./components/Timeline";
 import Skills from "./components/Skills";
@@ -32,6 +33,7 @@ export default function App() {
           <ChapterOne />
           <ChapterTwo />
           <ChapterThree />
+          <AIEraSection />
           <IronProjects />
           <Timeline />
           <Skills />
