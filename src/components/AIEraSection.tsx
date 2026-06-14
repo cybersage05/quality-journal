@@ -13,19 +13,19 @@ import { Reveal, SectionHeader, Pills } from "./ui";
 /* ─── Data ─────────────────────────────────────────────────────── */
 
 const TRAD_STEPS = [
-  { label: "Requirements Review",   time: "~4 hrs", pct: 42 },
-  { label: "Manual Test Design",    time: "~6 hrs", pct: 35 },
-  { label: "Script Development",    time: "~8 hrs", pct: 50 },
-  { label: "Execution & Debugging", time: "~5 hrs", pct: 38 },
-  { label: "Maintenance",           time: "~3 hrs", pct: 30 },
+  { label: "Requirements Review",   pct: 42 },
+  { label: "Manual Test Design",    pct: 35 },
+  { label: "Script Development",    pct: 50 },
+  { label: "Execution & Debugging", pct: 38 },
+  { label: "Maintenance",           pct: 30 },
 ];
 
 const AI_STEPS = [
-  { label: "Requirements Analysis",       time: "~3 min", pct: 100 },
-  { label: "AI-Assisted Test Generation", time: "~5 min", pct: 100 },
-  { label: "Automation Development",      time: "~8 min", pct: 100 },
-  { label: "Review & Refinement",         time: "~2 min", pct: 100 },
-  { label: "Continuous Validation",       time: "auto",   pct: 100 },
+  { label: "Requirements Analysis",       pct: 100 },
+  { label: "AI-Assisted Test Generation", pct: 100 },
+  { label: "Automation Development",      pct: 100 },
+  { label: "Review & Refinement",         pct: 100 },
+  { label: "Continuous Validation",       pct: 100 },
 ];
 
 const METRICS = [
@@ -54,9 +54,9 @@ const BEAM_CHARS = [
 /* ─── TerminalStep ──────────────────────────────────────────────── */
 
 function TerminalStep({
-  label, time, pct, index, isLast, isAI,
+  label, pct, index, isLast, isAI,
 }: {
-  label: string; time: string; pct: number;
+  label: string; pct: number;
   index: number; isLast: boolean; isAI: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -94,15 +94,6 @@ function TerminalStep({
         }`}>
           {!isAI && <span className="mr-1 text-slate-700">$</span>}
           {label}
-        </span>
-
-        {/* Time badge */}
-        <span className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[0.52rem] tracking-wide ${
-          isAI
-            ? "border border-gold/25 bg-gold/10 text-gold"
-            : "border border-white/[0.07] bg-white/[0.04] text-slate-600"
-        }`}>
-          {time}
         </span>
 
         {/* Progress bar */}
@@ -208,11 +199,6 @@ function LegacyCard() {
           ))}
         </div>
 
-        {/* Footer */}
-        <div className="mt-4 flex items-center justify-between rounded-lg border border-red-500/15 bg-red-500/[0.05] px-3 py-2">
-          <span className="font-mono text-[0.56rem] text-red-400/60">⚠ OVERHEAD DETECTED</span>
-          <span className="font-mono text-[0.56rem] text-slate-700">Time-intensive</span>
-        </div>
       </div>
     </motion.div>
   );
@@ -330,17 +316,6 @@ function AICard() {
             ))}
           </div>
 
-          {/* Footer */}
-          <div className="mt-4 flex items-center justify-between rounded-lg border border-gold/20 bg-gold/[0.05] px-3 py-2">
-            <motion.span
-              className="font-mono text-[0.56rem] text-gold"
-              animate={reduced ? {} : { opacity: [0.65, 1, 0.65] }}
-              transition={{ duration: 2.5, repeat: Infinity }}
-            >
-              ✓ ALL SYSTEMS OPTIMAL
-            </motion.span>
-            <span className="font-mono text-[0.56rem] text-gold/50">Faster · Smarter · Higher Coverage</span>
-          </div>
         </div>
       </motion.div>
     </div>
