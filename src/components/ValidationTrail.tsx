@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Reveal } from "./ui";
 import { Ladybug, Stamp } from "./decor";
 
@@ -191,9 +192,19 @@ const stations: Station[] = [
   },
 ];
 
+/* Particles that flow down the timeline */
+const PARTICLES = [
+  { dur: 7.0, delay: 0.0 },
+  { dur: 9.5, delay: 2.8 },
+  { dur: 6.5, delay: 5.2 },
+  { dur: 8.2, delay: 7.8 },
+];
+
 /* ---------- component ---------- */
 
 export default function ValidationTrail() {
+  const reduced = useReducedMotion();
+
   return (
     <div role="group" aria-label="Validation process at Cal-Comp">
       <p className="sr-only">
@@ -205,11 +216,35 @@ export default function ValidationTrail() {
       </p>
 
       <div className="relative">
-        {/* dashed gold trail */}
-        <div
+        {/* breathing dashed gold trail */}
+        <motion.div
           aria-hidden="true"
           className="absolute bottom-8 left-[1.4rem] top-2 w-px border-l-2 border-dashed border-gold/50 md:left-1/2"
+          animate={reduced ? {} : { opacity: [0.45, 0.9, 0.45] }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
         />
+
+        {/* particles flowing down the trail */}
+        {!reduced && PARTICLES.map((p, i) => (
+          <motion.div
+            key={i}
+            aria-hidden="true"
+            className="pointer-events-none absolute left-[1.4rem] top-2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-gold/80 md:left-1/2"
+            animate={{ y: [0, 950], opacity: [0, 0.95, 0.7, 0] }}
+            transition={{ duration: p.dur, delay: p.delay, repeat: Infinity, ease: "linear" }}
+          />
+        ))}
+
+        {/* faint energy pulse blob */}
+        {!reduced && (
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-[1.4rem] top-2 h-6 w-6 -translate-x-1/2 rounded-full bg-sky-400/18 md:left-1/2"
+            style={{ filter: "blur(5px)" }}
+            animate={{ y: [0, 950], opacity: [0, 0.55, 0.28, 0] }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeIn", repeatDelay: 2 }}
+          />
+        )}
 
         <ol className="space-y-9">
           {stations.map((s, i) => {
@@ -217,21 +252,54 @@ export default function ValidationTrail() {
             return (
               <li key={s.n} className="relative">
                 <Reveal delay={0.05}>
-                  {/* medallion on the trail */}
+                  {/* medallion positioning wrapper — kept separate so Framer transforms don't conflict with md:-translate-x-1/2 */}
                   <span
                     aria-hidden="true"
-                    className="absolute left-0 top-1 flex h-11 w-11 items-center justify-center rounded-full border-2 border-gold/70 bg-card text-forest shadow-[0_0_0_5px_rgba(201,164,92,0.12)] md:left-1/2 md:-translate-x-1/2"
+                    className="absolute left-0 top-1 md:left-1/2 md:-translate-x-1/2"
                   >
-                    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                      {s.icon}
-                    </svg>
+                    <motion.span
+                      className="relative flex h-11 w-11 items-center justify-center rounded-full border-2 border-gold/70 bg-card text-forest shadow-[0_0_0_5px_rgba(201,164,92,0.12)]"
+                      animate={reduced ? {} : { scale: [1, 1.06, 1] }}
+                      transition={reduced ? {} : {
+                        duration: 3.5,
+                        delay: i * 0.55,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      whileHover={reduced ? {} : {
+                        scale: 1.16,
+                        transition: { type: "spring", stiffness: 380, damping: 22 },
+                      }}
+                    >
+                      {/* ripple ring pulse */}
+                      {!reduced && (
+                        <motion.span
+                          aria-hidden="true"
+                          className="absolute inset-0 rounded-full border border-gold/55"
+                          animate={{ scale: [1, 1.75], opacity: [0.55, 0] }}
+                          transition={{
+                            duration: 2.5,
+                            delay: i * 0.55 + 0.4,
+                            repeat: Infinity,
+                            ease: "easeOut",
+                          }}
+                        />
+                      )}
+                      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                        {s.icon}
+                      </svg>
+                    </motion.span>
                   </span>
 
-                  {/* station card */}
-                  <div
+                  {/* station card with hover scale */}
+                  <motion.div
                     className={`ml-16 md:ml-0 md:w-[calc(50%-3.5rem)] ${
                       leftSide ? "md:mr-auto md:text-right" : "md:ml-auto"
                     }`}
+                    whileHover={reduced ? {} : {
+                      scale: 1.02,
+                      transition: { type: "spring", stiffness: 300, damping: 28 },
+                    }}
                   >
                     <p className="font-mono text-[0.6rem] tracking-[0.3em] text-gold">
                       STAGE {s.n}
@@ -260,16 +328,26 @@ export default function ValidationTrail() {
                         {s.hand}
                       </p>
                     )}
-                  </div>
+                  </motion.div>
 
-                  {/* sketch vignette on the opposite bank */}
-                  <div
+                  {/* floating sketch vignette on the opposite bank */}
+                  <motion.div
                     className={`absolute top-0 hidden lg:block ${
                       leftSide ? "right-[4%]" : "left-[4%]"
                     }`}
+                    animate={reduced ? {} : {
+                      y: leftSide ? [0, 5] : [0, -4],
+                      rotate: leftSide ? [0, 0.8] : [0, -0.7],
+                    }}
+                    transition={{
+                      duration: 9 + (i % 3) * 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      repeatType: "reverse",
+                    }}
                   >
                     {s.sketch}
-                  </div>
+                  </motion.div>
                 </Reveal>
 
                 {/* the defect detour lives between execution and sign-off */}
