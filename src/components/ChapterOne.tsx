@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { animate, motion, useInView, useReducedMotion } from "framer-motion";
-import { FlowDiagram, type FlowNode } from "./FlowDiagram";
 import ValidationTrail from "./ValidationTrail";
 import ValidationWorkflow from "./ValidationWorkflow";
-import { Impact, LeafCheck, MetaChips, Pills, Reveal, SectionHeader } from "./ui";
+import { Impact, MetaChips, Pills, Reveal, SectionHeader } from "./ui";
 import {
   CoffeeRing,
   Contours,
@@ -18,21 +17,6 @@ import {
   tilt,
 } from "./decor";
 
-const sfcFlow: FlowNode[] = [
-  { title: "SFC starts test session", icon: "play" },
-  { title: "Version check — installed vs approved", icon: "search" },
-  {
-    title: "Mismatch detected",
-    tone: "terracotta",
-    icon: "bug",
-    details: ["If versions match, testing proceeds immediately"],
-  },
-  { title: "SFC triggers PowerShell / BAT script", icon: "bolt" },
-  { title: "Pulls latest approved package from central server", icon: "download" },
-  { title: "Silent install + configuration", icon: "wrench" },
-  { title: "Version re-verified by SFC", icon: "shield" },
-  { title: "✓ Testing proceeds", tone: "gold", icon: "seal" },
-];
 
 /* Compact icon-led story row — replaces wall-of-text project blurbs */
 function StoryRow({
@@ -95,12 +79,6 @@ function DashboardSketch() {
   );
 }
 
-const benefits = [
-  "Eliminated manual updates across all production PCs",
-  "Every station guaranteed on the approved version",
-  "Test interruptions from version mismatch reduced to zero",
-  "Future deployments became one-step",
-];
 
 const facts: { value: number; prefix?: string; suffix?: string; label: string; icon: ReactNode }[] = [
   {
@@ -267,28 +245,12 @@ export default function ChapterOne() {
                   Stations ran outdated test software — interruptions across many production PCs.
                 </StoryRow>
                 <StoryRow kind="built">
-                  An automated version-sync mechanism wired into the Shop Floor Control system:
+                  An automated version-sync mechanism wired into the Shop Floor Control system — on mismatch, SFC triggers a PowerShell script that silently pulls and installs the approved package before testing proceeds.
+                </StoryRow>
+                <StoryRow kind="result">
+                  Eliminated manual updates across all production PCs. Test interruptions from version mismatch dropped to zero. Future deployments became one-step.
                 </StoryRow>
               </div>
-              <div className="my-2">
-                <FlowDiagram
-                  nodes={sfcFlow}
-                  compact
-                  ariaLabel="Auto-installer flow"
-                  description="The Shop Floor Control system checks installed versus approved software versions at every test session, and on mismatch automatically pulls and silently installs the approved package before testing proceeds."
-                />
-                <Fig n="03" label="version-sync mechanism" />
-              </div>
-              <ul className="space-y-2.5" aria-label="Benefits">
-                {benefits.map((b, i) => (
-                  <Reveal key={b} delay={0.08 * i}>
-                    <li className="flex gap-2.5 text-[0.85rem] leading-6 text-ink-soft">
-                      <LeafCheck />
-                      {b}
-                    </li>
-                  </Reveal>
-                ))}
-              </ul>
               <Pills items={["PowerShell", "Batch", "SFC Integration", "Windows Server"]} />
             </article>
           </Reveal>
