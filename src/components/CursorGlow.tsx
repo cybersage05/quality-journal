@@ -45,16 +45,31 @@ export default function CursorGlow() {
   if (!enabled) return null;
 
   return (
-    <motion.div
-      aria-hidden="true"
-      className="pointer-events-none fixed z-[55] hidden h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/2 rounded-full mix-blend-screen lg:block dark:mix-blend-plus-lighter"
-      style={{
-        left: sx,
-        top: sy,
-        background:
-          "radial-gradient(closest-side, rgba(56,189,248,0.22), transparent 68%)",
-        opacity: 0.65,
-      }}
-    />
+    <>
+      {/* Dark-mode glow — original visuals, unchanged */}
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none fixed z-[55] hidden h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/2 rounded-full mix-blend-plus-lighter dark:lg:block"
+        style={{
+          left: sx,
+          top: sy,
+          background:
+            "radial-gradient(closest-side, rgba(56,189,248,0.22), transparent 68%)",
+          opacity: 0.65,
+        }}
+      />
+      {/* Light-mode glow — soft blue ambient, hidden in dark */}
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none fixed z-[55] hidden h-[44rem] w-[44rem] -translate-x-1/2 -translate-y-1/2 rounded-full lg:block dark:hidden"
+        style={{
+          left: sx,
+          top: sy,
+          background:
+            "radial-gradient(closest-side, rgba(59,130,246,0.10) 0%, rgba(59,130,246,0.06) 38%, rgba(59,130,246,0.02) 64%, transparent 80%)",
+          opacity: 0.85,
+        }}
+      />
+    </>
   );
 }
