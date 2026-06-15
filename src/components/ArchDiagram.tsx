@@ -20,6 +20,7 @@ interface NodeDef {
   tone?: "hub" | "gold";
   icon: ReactNode;
   note: string;
+  detail?: string;
 }
 
 interface EdgeDef {
@@ -89,18 +90,19 @@ const nodes: NodeDef[] = [
   {
     id: "chg",
     name: "Charging System",
+    sub: "Ericsson Charging System",
     x: 350, y: 112, w: 200, h: 50,
     icon: I.bolt,
-    note: "Rates every subscriber event in real time. Any change here triggered full-ecosystem regression.",
+    note: "Processes subscriber transactions, balance updates, and service charging in real time.",
   },
   {
     id: "med",
     name: "Mediation",
-    sub: "central hub · data normalization",
+    sub: "Ericsson Mediation",
     x: 306, y: 212, w: 288, h: 68,
     tone: "hub",
     icon: I.funnel,
-    note: "Central router — normalizes charging events and distributes clean streams into two independent paths simultaneously.",
+    note: "Normalizes and routes transaction events between enterprise systems for downstream processing.",
   },
   // ── Path A: Operational ──────────────────────────────────────
   {
@@ -108,35 +110,36 @@ const nodes: NodeDef[] = [
     name: "Operational DB",
     x: 104, y: 338, w: 200, h: 50,
     icon: I.db,
-    note: "Live subscriber usage and account history at 10M+ record scale on MapR and Greenplum.",
+    note: "Transactional database storing real-time operational and subscriber activity data.",
   },
   {
     id: "api",
     name: "API Layer",
     x: 104, y: 442, w: 200, h: 50,
     icon: I.plug,
-    note: "Serves subscriber usage data to all three portals. Schema, contracts and performance validated here.",
+    note: "Exposes data services and APIs that power web portals and business applications.",
+    detail: "Retrieves data from backend databases and delivers it to enterprise web portals.",
   },
   {
     id: "self",
-    name: "Self Care",
+    name: "Selfcare",
     x: 22, y: 556, w: 148, h: 46,
     icon: I.phone,
-    note: "Primary self-service portal — end-to-end usage history validated on screens used by millions daily.",
+    note: "Subscriber-facing portal for account management, top-ups, and service operations.",
   },
   {
     id: "kic",
-    name: "Kic Care",
+    name: "KIC Care",
     x: 180, y: 556, w: 148, h: 46,
     icon: I.phone,
-    note: "Companion app sharing the same APIs with distinct flows — independent regression suite maintained.",
+    note: "Customer support portal used by service agents to manage subscriber requests.",
   },
   {
     id: "res",
     name: "Reseller Care",
     x: 338, y: 556, w: 148, h: 46,
     icon: I.phone,
-    note: "Retailer-facing portal for activations and account servicing, validated alongside all consumer apps.",
+    note: "Portal used by third-party resellers to manage transactions and customer services.",
   },
   // ── Path B: Reporting ────────────────────────────────────────
   {
@@ -145,7 +148,7 @@ const nodes: NodeDef[] = [
     sub: "report generation · usage analytics · business reporting",
     x: 596, y: 338, w: 200, h: 68,
     icon: I.warehouse,
-    note: "Aggregates platform usage for analytics and reporting. Cross-environment comparisons ran here across the 1.5-year AWS migration.",
+    note: "Aggregates operational data to generate reports, analytics, and business insights.",
   },
   {
     id: "usage",
@@ -482,6 +485,11 @@ export default function ArchDiagram() {
                 <p className="mt-1 text-[0.68rem] leading-[1.5] text-ink-soft">
                   {current.note}
                 </p>
+                {current.detail && (
+                  <p className="mt-1 text-[0.65rem] leading-[1.45] text-ink-soft/65">
+                    {current.detail}
+                  </p>
+                )}
               </div>
             </motion.div>
           );
